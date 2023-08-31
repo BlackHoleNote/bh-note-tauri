@@ -22,13 +22,13 @@ function App() {
     <div className="container">
       <h1>Welcome to Tauri!</h1>
 
-      <SplitPane split="vertical">
+      {/* <SplitPane split="vertical">
         <Pane initialSize="200px">You can use a Pane component</Pane>
         <div>or you can use a plain old div</div>
         <Pane initialSize="25%" minSize="10%" maxSize="500px">
           Using a Pane allows you to specify any constraints directly
         </Pane>
-      </SplitPane>;
+      </SplitPane>; */}
 
       <div className="row">
         <a href="https://vitejs.dev" target="_blank">
