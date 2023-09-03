@@ -9,6 +9,12 @@ struct KeydownDTO {
   key: String,
 }
 
+#[derive(serde::Deserialize, Debug)]
+struct LogDTO {
+    string: String,
+    logLevel: Option<String>
+}
+
 #[tauri::command]
 fn greet(name: &str) -> String {
     format!("Hellssso, {}! You've been greeted from Rust!", name)
@@ -20,8 +26,13 @@ fn main() {
         .setup(|app| {
             let id = app.listen_global("keydown", |event: tauri::Event| {
                 let deserialized: KeydownDTO = serde_json::from_str(event.payload().unwrap()).unwrap();
-                println!("got event-name with payload {:?}", deserialized);
+                println!("got event-name with payload2 {:?}", deserialized);
                 
+            });
+
+            let logHandler = app.listen_global("console_log", |event: tauri::Event| {
+                let deserialized: LogDTO = serde_json::from_str(event.payload().unwrap()).unwrap();
+                println!("❓ 로그 발생 {:?}", deserialized);
             });
             // unlisten to the event using the `id` returned on the `listen_global` function
             // a `once_global` API is also exposed on the `App` struct

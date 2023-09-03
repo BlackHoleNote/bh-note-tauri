@@ -1,10 +1,68 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
+import './index.css'
 import { hide } from "@tauri-apps/api/app";
 import Split from "react-split";
+import { emit } from "@tauri-apps/api/event";
 
+async function log(string: string) {
+  console.log(string);
+  emit("console_log", { string });
+}
+
+function initResizer() {
+  // const rightSide = resizer!.
+  log('resizer init');
+  const mouseDownHandler = (target: HTMLElement) => (e: MouseEvent) => {
+      let initialX = e.clientX;
+      let initialY = e.clientY;
+      let leftSide: HTMLElement = target.previousElementSibling as unknown as HTMLElement;
+      let rightSide: HTMLElement = target.nextElementSibling as unknown as HTMLElement;
+      let leftWidth = leftSide.getBoundingClientRect().width;
+let rightWidth = rightSide.getBoundingClientRect().width;
+
+      const mouseMoveHandler = (e: MouseEvent) => {
+          const dx = e.clientX - initialX;
+          const dy = e.clientY - initialY;
+          document.body.style.cursor = 'col-resize';
+
+          leftSide.style.userSelect = 'none';
+          leftSide.style.pointerEvents = 'none';
+
+          rightSide.style.userSelect = 'none';
+          rightSide.style.pointerEvents = 'none';
+
+  leftSide.style.width = `${dx + leftWidth}px`;
+  rightSide.style.width = `${rightWidth - dx}px`;
+      };
+
+      const mouseUpHandler = (e: MouseEvent) => {
+          // 모든 커서 관련 사항은 마우스 이동이 끝나면 제거됨
+          target.style.removeProperty('cursor');
+          document.body.style.removeProperty('cursor');
+
+          leftSide.style.removeProperty('user-select');
+          leftSide.style.removeProperty('pointer-events');
+
+          rightSide.style.removeProperty('user-select');
+          rightSide.style.removeProperty('pointer-events');
+
+          // 등록한 마우스 이벤트를 제거
+          document.removeEventListener('mousemove', mouseMoveHandler);
+          document.removeEventListener('mouseup', mouseUpHandler);
+      };
+      document.addEventListener('mousemove', mouseMoveHandler);
+      document.addEventListener('mouseup', mouseUpHandler);
+  };
+
+  let resizers = document.getElementsByClassName('divider');
+  [...resizers].map((resizer) => {
+      let divider = resizer as unknown as HTMLElement;
+      divider.addEventListener('mousedown', mouseDownHandler(resizer as HTMLElement));
+  });
+}
 
 function App() {
   const [greetMsg, setGreetMsg] = useState("");
@@ -13,80 +71,42 @@ function App() {
   async function greet() {
     // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
     setGreetMsg(await invoke("greet", { name }));
+    await log("greeted");
     await hide();
     console.log("hi");
 
     
   }
+  useEffect(() => {
+    initResizer();
+    return () => {
+      log('컴포넌트가 화면에서 사라짐');
+    };
+  }, []);
 
   return (
-    // <div className="container">
-    //   <h1>Welcome to Tauri!</h1>
-
-    //   {/* <SplitPane split="vertical">
-    //     <Pane initialSize="200px">You can use a Pane component</Pane>
-    //     <div>or you can use a plain old div</div>
-    //     <Pane initialSize="25%" minSize="10%" maxSize="500px">
-    //       Using a Pane allows you to specify any constraints directly
-    //     </Pane>
-    //   </SplitPane>; */}
-    //   <Split
-    //       sizes={[25, 75]}
-    //       minSize={100}
-    //       expandToMin={false}
-    //       gutterSize={10}
-    //       gutterAlign="center"
-    //       snapOffset={30}
-    //       dragInterval={1}
-    //       direction="vertical"
-    //       cursor="col-resize"
-    //   >
-    //       <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-    //       <a href="https://tauri.app" target="_blank">
-    //         <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-    //       </a>
-    //       <img src={reactLogo} className="logo react" alt="React logo" />
-    //   </Split>
-
-    //   <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-    //   <form
-    //     className="row"
-    //     onSubmit={(e) => {
-    //       e.preventDefault();
-    //       greet();
-    //       // await hide();
-    //     }}
-    //   >
-    //     <input
-    //       id="greet-input"
-    //       onChange={(e) => setName(e.currentTarget.value)}
-    //       placeholder="Enter a name..."
-    //     />
-    //     <button type="submit">Greet</button>
-    //   </form>
-
-    //   <p>{greetMsg}</p>
-    // </div>
     <div className="main">
       <div className="split-view hbox">
-        <div className="splitContainer container1 w-40 bg(#fff8d3)">
-            <p className="w-40">준</p>
+        <div className="splitContainer container1 w-[40] bg-[#eeeeee]">
+            {/* <p className="">준</p>
             <p>비</p>
             <p>중</p>
             <h1 className="text-3xl font-bold underline">
               Hello word!
             </h1>
+            <h1 className="text-2xl font-bold underline">
+              Hello word!
+            </h1> */}
         </div>
-        <div className="divider"></div>
-        <div className="splitContainer container2 bg(#ffffec)">
-            <p>준</p>
+        <div className="divider w-[3px]"></div>
+        <div className="splitContainer container2 bg-[#e7e750]">
+            {/* <p>준</p>
             <p>비</p>
-            <p>중</p>
+            <p>중</p> */}
             {/* <NoteList noteListPresentationService={container.resolve(NoteListPresentationService)}/> */}
         </div>
-        <div className="divider 2"></div>
-        <div className="splitContainer container3 bg(#f3f3f3) flex-grow(1)">
+        <div className="divider w-[3px]"></div>
+        <div className="splitContainer container3 bg-[#dcd2d2] grow">
             {/* <NoteEditorView noteService={container.resolve(NoteService)}/> */}
         </div>
       </div>
@@ -95,3 +115,4 @@ function App() {
 }
 
 export default App;
+
