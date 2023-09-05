@@ -1,7 +1,8 @@
 import React from "react";
 import { DiCss3, DiJavascript, DiNpm } from "react-icons/di";
 import { FaList, FaRegFolder, FaRegFolderOpen } from "react-icons/fa";
-import TreeView, { flattenTree } from "react-accessible-treeview";
+import { GoFile, GoFileDirectory } from "react-icons/go";
+import TreeView, { INode, flattenTree } from "react-accessible-treeview";
 import "./NoteList.css";
 import { log } from "./log";
 import {
@@ -11,27 +12,17 @@ import {
 import { useRecoilState } from "recoil";
 import { noteListState } from "./noteListState";
 import { getTimeLogs } from "./repository/APIClient";
+import { File, FileVisitor, Folder, Note } from "./Entity/Note";
 
-class Note {
-  id: number;
-  title: string;
-  content: string;
-  constructor(id: number, title: string, content: string) {
-    this.id = id;
-    this.title = title;
-    this.content = content;
-  }
+class FileViewModel implements IFlatMetadata {
+  constructor(public id: number, public title: string) {}
 
-  // [x: string]: string | number | null | undefined;
+  [x: string]: string | number | null | undefined;
 }
 
-interface NoteItemViewModel extends IFlatMetadata {
-  id: number;
-}
-
-const folder: ITreeNode<NoteItemViewModel> = {
+const folderExample: ITreeNode<IFlatMetadata> = {
   name: "",
-  metadata: { id: 0 },
+  metadata: { id: 0, title: "" },
   children: [
     {
       name: "src",
@@ -63,7 +54,41 @@ const folder: ITreeNode<NoteItemViewModel> = {
   ],
 };
 
-const data = flattenTree(folder);
+const data = flattenTree(folderExample);
+
+class FileVisitorImpl implements FileVisitor<ITreeNode<FileViewModel>> {
+  node: ITreeNode<FileViewModel> = { name: "" };
+
+  visitFolder(folder: Folder): ITreeNode<FileViewModel> {
+    const children = folder.childs.map((note) => {
+      return this.visitFile(note);
+    });
+
+    return this.visitFile(folder, children);
+  }
+
+  visitNote(note: Note): ITreeNode<FileViewModel> {
+    return this.visitFile(note);
+  }
+
+  visitFile(
+    file: File,
+    children: ITreeNode<FileViewModel>[] = []
+  ): ITreeNode<FileViewModel> {
+    return {
+      id: file.id,
+      name: file.title,
+      metadata: new FileViewModel(file.id, file.title),
+      children: children,
+    };
+  }
+}
+
+function makeData(viewModel: Folder): INode<FileViewModel>[] {
+  const visitor = new FileVisitorImpl();
+
+  return flattenTree(visitor.visitFolder(viewModel));
+}
 interface FolderIconProps {
   isOpen: boolean;
 }
@@ -81,8 +106,6 @@ interface FileIconProps {
 
 const FileIcon: React.FC<FileIconProps> = ({ filename }) => {
   const extension = filename.slice(filename.lastIndexOf(".") + 1);
-  let note = new Note(1, "title", "content");
-  // note[extension] = filename;
   switch (extension) {
     case "js":
       return <DiJavascript color="yellow" className="icon" />;
@@ -98,11 +121,20 @@ const FileIcon: React.FC<FileIconProps> = ({ filename }) => {
 };
 
 export default function NoteList() {
-  const [count, setCount] = useRecoilState(noteListState);
+  const [count, _] = useRecoilState(noteListState);
 
   return (
     <div className="note-list">
-      <h1>{count}</h1>
+      {/* <h1>{count}</h1> */}
+      <div className="flex justify-end">
+        <button onClick={() => log("buttonCLick")}>
+          <GoFileDirectory clasName="icon" />
+        </button>
+        <button onClick={() => log("fileClick")}>
+          <GoFile className="icon" />
+        </button>
+      </div>
+
       <div className="directory">
         <TreeView
           data={data}

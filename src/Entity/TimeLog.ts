@@ -50,28 +50,14 @@ enum TimeLogType {
 }
 
 class TimeLogs {
-  id: number;
-  previousVersion: number;
-  version: number;
-  title: string;
-  lastUpdatedTime: Date;
-  contents: { [key: string]: TimeLog };
-
   constructor(
-    id: number,
-    previousVersion: number,
-    version: number,
-    title: string,
-    lastUpdatedTime: Date,
-    contents: { [key: string]: TimeLog }
-  ) {
-    this.id = id;
-    this.previousVersion = previousVersion;
-    this.version = version;
-    this.title = title;
-    this.lastUpdatedTime = lastUpdatedTime;
-    this.contents = contents;
-  }
+    public id: number,
+    public previousVersion: number,
+    public version: number,
+    public title: string,
+    public lastUpdatedTime: Date,
+    public contents: TimeLog[]
+  ) {}
 
   static temp(id: number = 0): TimeLogs {
     // ForDebugging 주석 부분은 TypeScript에서는 제거하거나 수정해야 할 수 있습니다.
