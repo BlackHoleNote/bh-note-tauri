@@ -3,7 +3,8 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./styles.css";
 import { emit } from "@tauri-apps/api/event";
-import { RecoilRoot } from "recoil";
+import { Provider } from "react-redux";
+import { store } from "./store/app";
 
 document.addEventListener("keydown", (e: KeyboardEvent) => {
   console.dir(`metaKey:${e.metaKey} key:${e.key}`);
@@ -12,8 +13,8 @@ document.addEventListener("keydown", (e: KeyboardEvent) => {
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <RecoilRoot>
+    <Provider store={store}>
       <App />
-    </RecoilRoot>
+    </Provider>
   </React.StrictMode>
 );

@@ -9,10 +9,11 @@ import {
   IFlatMetadata,
   ITreeNode,
 } from "react-accessible-treeview/dist/TreeView/utils";
-import { useRecoilState } from "recoil";
-import { noteListState } from "./noteListState";
 import { getTimeLogs } from "./repository/APIClient";
-import { File, FileVisitor, Folder, Note } from "./Entity/Note";
+import { File, FileVisitor, Folder, Note, RootFolder } from "./Entity/Note";
+import { useAppDispatch, useAppSelector } from "./store/hooks";
+import { addNewFolder, addNewNote } from "./store/NoteListSlice";
+import { increment } from "./store/CounterSlice";
 
 class FileViewModel implements IFlatMetadata {
   constructor(public id: number, public title: string) {}
@@ -121,16 +122,20 @@ const FileIcon: React.FC<FileIconProps> = ({ filename }) => {
 };
 
 export default function NoteList() {
-  const [count, _] = useRecoilState(noteListState);
+  const count = useAppSelector((state) => state.counter.value);
+  const rootNote = useAppSelector((state) => state.noteList);
+  const dispatch = useAppDispatch();
+
+  const data = makeData(rootNote[0]);
 
   return (
     <div className="note-list">
-      {/* <h1>{count}</h1> */}
+      <h1>{count}</h1>
       <div className="flex justify-end">
-        <button onClick={() => log("buttonCLick")}>
+        <button onClick={() => dispatch(increment())}>
           <GoFileDirectory clasName="icon" />
         </button>
-        <button onClick={() => log("fileClick")}>
+        <button onClick={() => dispatch(addNewNote())}>
           <GoFile className="icon" />
         </button>
       </div>

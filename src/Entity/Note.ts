@@ -1,3 +1,5 @@
+import { Root } from "react-dom/client";
+
 export interface FileVisitor<T> {
   visitFolder(folder: Folder): T;
   visitNote(note: Note): T;
@@ -29,5 +31,15 @@ export class Note implements File {
 export class RootFolder extends Folder {
   constructor() {
     super(0, "", []);
+  }
+
+  addNewFolder(): RootFolder {
+    this.childs.push(new Folder(1, `${Math.random()}`, []));
+    return this;
+  }
+
+  addNewNote(): RootFolder {
+    this.childs.push(new Note(0, `${Math.random()}`));
+    return this;
   }
 }

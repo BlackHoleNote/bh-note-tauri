@@ -9,9 +9,7 @@ import { emit } from "@tauri-apps/api/event";
 import NoteList from "./NoteList";
 import TimeLogList from "./TimeLogList";
 import TimeLogEditor from "./TimeLogEditor";
-import { noteListState } from "./noteListState.ts";
 import { log } from "./log";
-import { useRecoilState, useRecoilValue } from "recoil";
 
 function initResizer() {
   // const rightSide = resizer!.
@@ -73,7 +71,6 @@ function initResizer() {
 function App() {
   const [greetMsg, setGreetMsg] = useState("");
   const [name, setName] = useState("");
-  const [count, setCount] = useRecoilState(noteListState);
 
   async function greet() {
     // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
@@ -84,7 +81,6 @@ function App() {
   }
   useEffect(() => {
     initResizer();
-    setCount("컴포넌트 로딩완료");
     return () => {
       log("컴포넌트가 화면에서 사라짐");
     };
