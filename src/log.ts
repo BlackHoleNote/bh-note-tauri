@@ -1,7 +1,13 @@
 import { emit } from "@tauri-apps/api/event";
 
-export async function log(object: any) {
+export function log(
+  object: any,
+  customMessage: string = "",
+  caller: String = ""
+) {
   let string = JSON.stringify(object);
-  console.log(string);
-  emit("console_log", { string });
+  console.log(`${customMessage}!!! ` + string);
+  emit("console_log", {
+    string: `${customMessage}!!! ` + string,
+  });
 }

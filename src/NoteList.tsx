@@ -12,50 +12,13 @@ import {
 import { getTimeLogs } from "./repository/APIClient";
 import { File, FileVisitor, Folder, Note, RootFolder } from "./Entity/Note";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { addNewFolder, addNewNote } from "./store/NoteListSlice";
+import {
+  FileViewModel,
+  addNewFolder,
+  addNewNote,
+  selectNode,
+} from "./store/NoteListSlice";
 import { increment } from "./store/CounterSlice";
-
-class FileViewModel implements IFlatMetadata {
-  constructor(public id: number, public title: string) {}
-
-  [x: string]: string | number | null | undefined;
-}
-
-const folderExample: ITreeNode<IFlatMetadata> = {
-  name: "",
-  metadata: { id: 0, title: "" },
-  children: [
-    {
-      name: "src",
-      children: [
-        { name: "index.js" },
-        { name: "styles.css" },
-        { name: "2022-03-20", metadata: { id: 1 } },
-      ],
-    },
-    {
-      name: "node_modules",
-      children: [
-        {
-          name: "react-accessible-treeview",
-          children: [{ name: "index.js" }],
-        },
-        { name: "react", children: [{ name: "index.js" }] },
-      ],
-    },
-    {
-      name: ".npmignore",
-    },
-    {
-      name: "package.json",
-    },
-    {
-      name: "webpack.config.js",
-    },
-  ],
-};
-
-const data = flattenTree(folderExample);
 
 class FileVisitorImpl implements FileVisitor<ITreeNode<FileViewModel>> {
   node: ITreeNode<FileViewModel> = { name: "" };
@@ -65,21 +28,27 @@ class FileVisitorImpl implements FileVisitor<ITreeNode<FileViewModel>> {
       return this.visitFile(note);
     });
 
-    return this.visitFile(folder, children);
+    return this.makeFile(folder, children);
   }
 
   visitNote(note: Note): ITreeNode<FileViewModel> {
-    return this.visitFile(note);
+    return this.makeFile(note);
   }
 
-  visitFile(
+  visitFile(file: File): ITreeNode<FileViewModel> {
+    if ((file as Folder).childs != undefined)
+      return this.visitFolder(file as Folder);
+    return this.makeFile(file);
+  }
+
+  makeFile(
     file: File,
     children: ITreeNode<FileViewModel>[] = []
   ): ITreeNode<FileViewModel> {
     return {
       id: file.id,
       name: file.title,
-      metadata: new FileViewModel(file.id, file.title),
+      metadata: new FileViewModel(file?.id ?? 0, file.title),
       children: children,
     };
   }
@@ -123,19 +92,17 @@ const FileIcon: React.FC<FileIconProps> = ({ filename }) => {
 
 export default function NoteList() {
   const count = useAppSelector((state) => state.counter.value);
-  const rootNote = useAppSelector((state) => state.noteList);
+  const rootNote = useAppSelector((state) => state.noteList.root);
   const dispatch = useAppDispatch();
-
-  const data = makeData(rootNote[0]);
-
+  const data = makeData(rootNote);
   return (
     <div className="note-list">
       <h1>{count}</h1>
       <div className="flex justify-end">
-        <button onClick={() => dispatch(increment())}>
+        <button onClick={() => dispatch(addNewFolder())}>
           <GoFileDirectory clasName="icon" />
         </button>
-        <button onClick={() => dispatch(addNewNote())}>
+        <button onClick={() => dispatch(increment())}>
           <GoFile className="icon" />
         </button>
       </div>
@@ -145,15 +112,27 @@ export default function NoteList() {
           data={data}
           aria-label="directory tree"
           onSelect={async (node) => {
-            if (node.isSelected) {
-              if (node.element.metadata?.id == 1) {
-                log(JSON.stringify(await getTimeLogs()));
-              } else {
-                log(node.element.metadata?.id?.toString() ?? "no metadata");
+            let fileViewModel = node.element.metadata as FileViewModel;
+            if (fileViewModel != undefined) {
+              // fileViewModel.id;
+              if (node.isSelected) {
+                dispatch(selectNode(node.element as INode<FileViewModel>));
               }
+
+              log(fileViewModel, "😄 Selected");
             } else {
-              // MARK: - deselect도 같이 출력됨
+              log(node, "🙀 Selected target undefined");
             }
+            // if (node.isSelected) {
+            //   log(node, "🙀 isSelected");
+            //   // if (node.element.metadata?.id == 1) {
+            //   //   log(JSON.stringify(await getTimeLogs()));
+            //   // } else {
+            //   //   log(node.element.metadata?.id?.toString() ?? "no metadata");
+            //   // }
+            // } else {
+            //   // MARK: - deselect도 같이 출력됨
+            // }
           }}
           nodeRenderer={({
             element,
@@ -162,13 +141,14 @@ export default function NoteList() {
             getNodeProps,
             level,
           }) => (
-            <div {...getNodeProps()} style={{ paddingLeft: 20 * (level - 1) }}>
+            // style={{ paddingLeft: 20 * (level - 1) }}
+            <div {...getNodeProps()} style={{ paddingLeft: 12 * (level - 1) }}>
               {isBranch ? (
                 <FolderIcon isOpen={isExpanded} />
               ) : (
                 <FileIcon filename={element.name} />
               )}
-              {element.name}
+              <p>{element.name}</p>
             </div>
           )}
         />

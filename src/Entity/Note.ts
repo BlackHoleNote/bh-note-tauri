@@ -6,40 +6,42 @@ export interface FileVisitor<T> {
 }
 
 export interface File {
-  id: number;
+  id: number | undefined;
+  title: string;
+  // accept(visitor: FileVisitor<any>): void;
+}
+
+export interface Folder extends File {
+  // constructor(public id: number, public title: string, public childs: File[]) {}
+  id: number | undefined;
+  title: string;
+  childs: File[];
+
+  // accept(visitor: FileVisitor<any>): void
+  // {
+  //   visitor.visitFolder(this);
+  // }
+}
+
+export interface Note extends File {
+  // constructor(public id: number, public title: string) {}
+  id: number | undefined;
   title: string;
 
-  accept(visitor: FileVisitor<any>): void;
+  // accept(visitor: FileVisitor<any>): void {
+  //   visitor.visitNote(this);
+  // }
 }
 
-export class Folder implements File {
-  constructor(public id: number, public title: string, public childs: File[]) {}
-
-  accept(visitor: FileVisitor<any>): void {
-    visitor.visitFolder(this);
-  }
-}
-
-export class Note implements File {
-  constructor(public id: number, public title: string) {}
-
-  accept(visitor: FileVisitor<any>): void {
-    visitor.visitNote(this);
-  }
-}
-
-export class RootFolder extends Folder {
-  constructor() {
-    super(0, "", []);
-  }
-
-  addNewFolder(): RootFolder {
-    this.childs.push(new Folder(1, `${Math.random()}`, []));
-    return this;
-  }
-
-  addNewNote(): RootFolder {
-    this.childs.push(new Note(0, `${Math.random()}`));
-    return this;
-  }
+export interface RootFolder extends Folder {
+  // constructor() {
+  //   super(0, "", []);
+  // }
+  //   this.childs.push(new Folder(1, `${Math.random()}`, []));
+  //   return this;
+  // }
+  // addNewNote(): RootFolder {
+  //   this.childs.push(new Note(0, `${Math.random()}`));
+  //   return this;
+  // }
 }
