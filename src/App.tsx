@@ -76,29 +76,27 @@ function App() {
     // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
     setGreetMsg(await invoke("greet", { name }));
     await log("greeted");
-    await hide();
-    console.log("hi");
   }
   useEffect(() => {
-    initResizer();
+    // initResizer();
+    log("App didMount");
     return () => {
-      log("컴포넌트가 화면에서 사라짐");
+      log("App didUnmount");
     };
   }, []);
 
   return (
     <div className="main">
       <div className="split-view hbox">
-        <div className="splitContainer container1 w-[40] bg-[#eeeeee]">
-          <NoteList />
-        </div>
+        <div className="splitContainer container1 w-[40] bg-[#eeeeee]"></div>
+        <TimeLogList />
         <div className="divider w-[3px]"></div>
         <div className="splitContainer container2 bg-[#e7e750]">
+          <NoteList />
           {/* <p>준</p>
             <p>비</p>
             <p>중</p> */}
           {/* <NoteList noteListPresentationService={container.resolve(NoteListPresentationService)}/> */}
-          <TimeLogList />
         </div>
         <div className="divider w-[3px]"></div>
         <div className="splitContainer container3 bg-[#dcd2d2] grow">

@@ -11,10 +11,13 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
+    "@replit/codemirror-vim": "^6.0.14",
     "@tauri-apps/api": "^1.4.0",
     "@types/lodash": "^4.14.198",
     "@types/react-redux": "^7.1.26",
+    "@uiw/react-codemirror": "^4.21.13",
     "axios": "^1.5.0",
+    "codemirror": "^6.0.1",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-accessible-treeview": "^2.8.0",

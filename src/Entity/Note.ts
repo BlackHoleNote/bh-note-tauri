@@ -23,7 +23,7 @@ export interface Folder extends File {
   // }
 }
 
-export interface Note extends File {
+export interface Note {
   // constructor(public id: number, public title: string) {}
   id: number | undefined;
   title: string;

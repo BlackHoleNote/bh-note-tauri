@@ -19,6 +19,7 @@ import {
   selectNode,
 } from "./store/NoteListSlice";
 import { increment } from "./store/CounterSlice";
+import { event } from "@tauri-apps/api";
 
 class FileVisitorImpl implements FileVisitor<ITreeNode<FileViewModel>> {
   node: ITreeNode<FileViewModel> = { name: "" };
@@ -93,8 +94,8 @@ const FileIcon: React.FC<FileIconProps> = ({ filename }) => {
 export default function NoteList() {
   const count = useAppSelector((state) => state.counter.value);
   const rootNote = useAppSelector((state) => state.noteList.root);
+  const selectedNode = useAppSelector((state) => state.noteList.selectedNode);
   const dispatch = useAppDispatch();
-  const data = makeData(rootNote);
   return (
     <div className="note-list">
       <h1>{count}</h1>
@@ -107,52 +108,37 @@ export default function NoteList() {
         </button>
       </div>
 
-      <div className="directory">
-        <TreeView
-          data={data}
-          aria-label="directory tree"
-          onSelect={async (node) => {
-            let fileViewModel = node.element.metadata as FileViewModel;
-            if (fileViewModel != undefined) {
-              // fileViewModel.id;
-              if (node.isSelected) {
-                dispatch(selectNode(node.element as INode<FileViewModel>));
+      <ul className="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        {rootNote.map((element) => {
+          return (
+            <button
+              type="button"
+              onClick={(target) => {
+                target.currentTarget.focus();
+                dispatch(selectNode(element));
+              }}
+              className={
+                selectedNode?.id == element?.id
+                  ? "bg-cyan-400"
+                  : "" +
+                    "w-full px-4 py-2 font-medium text-left border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white"
               }
-
-              log(fileViewModel, "😄 Selected");
-            } else {
-              log(node, "🙀 Selected target undefined");
-            }
-            // if (node.isSelected) {
-            //   log(node, "🙀 isSelected");
-            //   // if (node.element.metadata?.id == 1) {
-            //   //   log(JSON.stringify(await getTimeLogs()));
-            //   // } else {
-            //   //   log(node.element.metadata?.id?.toString() ?? "no metadata");
-            //   // }
-            // } else {
-            //   // MARK: - deselect도 같이 출력됨
-            // }
-          }}
-          nodeRenderer={({
-            element,
-            isBranch,
-            isExpanded,
-            getNodeProps,
-            level,
-          }) => (
-            // style={{ paddingLeft: 20 * (level - 1) }}
-            <div {...getNodeProps()} style={{ paddingLeft: 12 * (level - 1) }}>
-              {isBranch ? (
-                <FolderIcon isOpen={isExpanded} />
-              ) : (
-                <FileIcon filename={element.name} />
-              )}
-              <p>{element.name}</p>
-            </div>
-          )}
-        />
-      </div>
+            >
+              {element.title}
+            </button>
+          );
+        })}
+        {/* <li className="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600">
+          Profile
+        </li>
+        <li className="w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600">
+          Settings
+        </li>
+        <li className="w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600">
+          Messages
+        </li>
+        <li className="w-full px-4 py-2 rounded-b-lg">Download</li> */}
+      </ul>
     </div>
   );
 }
