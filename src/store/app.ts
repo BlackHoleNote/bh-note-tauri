@@ -1,12 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { counterReducer } from "./CounterSlice";
 import { noteListReducer } from "./NoteListSlice";
+import { timeNotesReducer } from "./TimeNotesSlice";
 // ...
 
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
     noteList: noteListReducer,
+    timeNotes: timeNotesReducer,
     // posts: postsReducer,
     // comments: commentsReducer,
     // users: usersReducer,
