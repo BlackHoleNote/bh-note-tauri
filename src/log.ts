@@ -8,6 +8,7 @@ export function log(
   let string = JSON.stringify(object);
   console.log(`${customMessage}!!! ` + string);
   emit("console_log", {
-    string: `${customMessage}!!! ` + string,
+    title: customMessage === "" ? null : `${customMessage}!!!`,
+    string: string ?? "",
   });
 }

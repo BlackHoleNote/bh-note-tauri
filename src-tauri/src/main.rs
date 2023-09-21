@@ -11,6 +11,7 @@ struct KeydownDTO {
 
 #[derive(serde::Deserialize, Debug)]
 struct LogDTO {
+    title: Option<String>,
     string: String,
     logLevel: Option<String>
 }
@@ -31,8 +32,9 @@ fn main() {
             });
 
             let logHandler = app.listen_global("console_log", |event: tauri::Event| {
+                println!("{:?}", event.payload());
                 let deserialized: LogDTO = serde_json::from_str(event.payload().unwrap()).unwrap();
-                println!("❓ 로그 발생 {:?}", deserialized);
+                println!("❓ 로그 발생 {:#?}", deserialized);
             });
             // unlisten to the event using the `id` returned on the `listen_global` function
             // a `once_global` API is also exposed on the `App` struct

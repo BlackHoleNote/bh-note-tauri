@@ -23,11 +23,16 @@ export interface Folder extends File {
   // }
 }
 
+export interface SaveNoteDTO {
+  id: number;
+  tempId?: string;
+}
+
 export interface Note {
   // constructor(public id: number, public title: string) {}
-  id: number | undefined;
+  id: number | string;
   title: string;
-
+  contents: string;
   // accept(visitor: FileVisitor<any>): void {
   //   visitor.visitNote(this);
   // }

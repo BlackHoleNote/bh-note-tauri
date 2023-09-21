@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { DiCss3, DiJavascript, DiNpm } from "react-icons/di";
 import { FaList, FaRegFolder, FaRegFolderOpen } from "react-icons/fa";
 import { GoFile, GoFileDirectory } from "react-icons/go";
@@ -9,13 +9,14 @@ import {
   IFlatMetadata,
   ITreeNode,
 } from "react-accessible-treeview/dist/TreeView/utils";
-import { getTimeLogs } from "./repository/APIClient";
+import { getTimeLogs, useGetAllNotesQuery } from "./repository/APIClient";
 import { File, FileVisitor, Folder, Note, RootFolder } from "./Entity/Note";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import {
   FileViewModel,
-  addNewFolder,
+  addNewNotes,
   addNewNote,
+  loadNotes,
   selectNode,
 } from "./store/NoteListSlice";
 import { increment } from "./store/CounterSlice";
@@ -95,12 +96,21 @@ export default function NoteList() {
   const count = useAppSelector((state) => state.counter.value);
   const rootNote = useAppSelector((state) => state.noteList.root);
   const selectedNode = useAppSelector((state) => state.noteList.selectedNode);
+  const { data } = useGetAllNotesQuery("hi");
+
+  useEffect(() => {
+    log(data, "data will changed: ");
+    if ((data ?? []).length > 0) {
+      dispatch(loadNotes(data!));
+    }
+  }, [data]);
+
   const dispatch = useAppDispatch();
   return (
     <div className="note-list">
       <h1>{count}</h1>
       <div className="flex justify-end">
-        <button onClick={() => dispatch(addNewFolder())}>
+        <button onClick={() => dispatch(addNewNotes())}>
           <GoFileDirectory clasName="icon" />
         </button>
         <button onClick={() => dispatch(increment())}>
@@ -109,7 +119,7 @@ export default function NoteList() {
       </div>
 
       <ul className="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-        {rootNote.map((element) => {
+        {(rootNote ?? []).map((element) => {
           return (
             <button
               type="button"

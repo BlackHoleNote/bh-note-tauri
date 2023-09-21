@@ -1,11 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "./app";
-import { FileVisitor, Folder, Note, RootFolder } from "../Entity/Note";
+import {
+  FileVisitor,
+  Folder,
+  Note,
+  RootFolder,
+  SaveNoteDTO,
+} from "../Entity/Note";
 import { log } from "../log";
 import { combineReducers } from "redux";
 import { counterReducer } from "./CounterSlice";
-import _, { random } from "lodash";
+import _, { random, uniqueId } from "lodash";
 import { INode } from "react-accessible-treeview";
 import { IFlatMetadata } from "react-accessible-treeview/dist/TreeView/utils";
 
@@ -27,11 +33,12 @@ const initialState: NoteListState = {
   root: [],
 };
 
-function createNewFolder(title: string): Folder {
+function createNewNote(title: string): Note {
+  let id = uniqueId("TEMP_");
   return {
-    id: _.random(1000, 100000),
-    title: `${title}`,
-    childs: [],
+    id: id,
+    title: `${new Date().toLocaleDateString()}`,
+    contents: "",
   };
 }
 
@@ -39,19 +46,24 @@ function createNewFolder2(state: NoteListState) {
   // if (state.selectedNode == null) {
   //   state.root.childs.push(createNewFolder("/"));
   // } else {
-  state.root.push(createNewFolder("Untitled"));
+  state.root.push(createNewNote("Untitled"));
 }
 
 export const noteListSlice = createSlice({
   name: "noteList",
   initialState: initialState,
   reducers: {
-    addNewFolder: (state) => {
+    addNewNotes: (state) => {
       createNewFolder2(state);
       log(state, "👿 before rendering");
     },
 
     addNewNote: (state) => {},
+
+    loadNotes: (state, action: PayloadAction<Note[]>) => {
+      const notes = action.payload;
+      state.root = state.root.concat(notes);
+    },
     // Use the PayloadAction type to declare the contents of `action.payload`
     incrementByAmount: (state, action: PayloadAction<number>) => {
       //   state.value += action.payload;
@@ -61,11 +73,33 @@ export const noteListSlice = createSlice({
       log(action.payload, "note selected");
       state.selectedNode = action.payload;
     },
+
+    selectedTimeNoteDidCreate: (state, action: PayloadAction<SaveNoteDTO>) => {
+      log(action.payload, "timeNoteDidCreate");
+      let index = state.root.findIndex(
+        (note) => note.id === action.payload.tempId
+      );
+      if (index !== -1) {
+        state.root[index].id = action.payload.id;
+        log(state.root, "timeNoteRootTree Updated👻");
+      }
+      if (state.selectedNode !== null) {
+        if (state.selectedNode.id === action.payload.tempId) {
+          state.selectedNode.id = action.payload.id;
+        }
+      }
+    },
   },
 });
 
-export const { addNewFolder, addNewNote, incrementByAmount, selectNode } =
-  noteListSlice.actions;
+export const {
+  addNewNotes,
+  addNewNote,
+  incrementByAmount,
+  selectNode,
+  loadNotes,
+  selectedTimeNoteDidCreate,
+} = noteListSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectCount = (state: RootState) => state.noteList.root;

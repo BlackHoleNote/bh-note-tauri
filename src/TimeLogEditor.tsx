@@ -1,17 +1,99 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useAppSelector } from "./store/hooks";
 import ReactCodeMirror from "@uiw/react-codemirror";
 import { vim } from "@replit/codemirror-vim";
 import { log } from "./log";
 import { useDispatch } from "react-redux";
-import { TimeLogChanges, onTimeNoteChange } from "./store/TimeNotesSlice";
+import { onTimeNoteChange, timeNoteWillStart } from "./store/TimeNotesSlice";
+import { TimeLogChanges } from "./Entity/TimeLog";
+import {
+  createTimeLogsAPI,
+  saveTimeLogsAPI,
+  timeLogApi,
+  useGetAllNotesQuery,
+} from "./repository/APIClient";
+import { debounce } from "lodash";
+import { Note } from "./Entity/Note";
+import { type } from "@tauri-apps/api/os";
+import { selectedTimeNoteDidCreate } from "./store/NoteListSlice";
 
 export default function TimeLogEditor() {
   let selectedNode = useAppSelector((state) => state.noteList.selectedNode);
+  let dispatch = useDispatch();
+  const previous = useRef(selectedNode);
   let timeNotes = useAppSelector((state) => state.timeNotes.value);
-  const onChange = useCallback((value, viewUpdate) => {
-    console.log("value:", value);
-  }, []);
+  const ref = useRef(timeNotes);
+  ref.current = timeNotes;
+  const selectedNoteRef = useRef(selectedNode);
+  selectedNoteRef.current = selectedNode;
+
+  const callback = useMemo(() => {
+    log(selectedNode, "callback created!!!!!!!!!!!!!❌");
+    if (selectedNode === null) {
+      return () => {};
+    }
+    let isTempCreate = true;
+    const isTempType = typeof selectedNode.id === "string";
+    if (isTempType) {
+      return debounce(async () => {
+        if (selectedNoteRef.current == null) {
+          return;
+        }
+        let note: Note = {
+          id: selectedNoteRef.current.id,
+          title: selectedNoteRef.current.title,
+          contents: ref.current,
+        };
+        if ((note.id ?? 0) === 0 && note.title === "") {
+          // TODO: note.title === "" will be deleted
+          return;
+        }
+        if (isTempType && isTempCreate) {
+          log(note, "debounce timeLogApi.endpoints API will call");
+          try {
+            isTempCreate = false;
+            let data = await createTimeLogsAPI(note);
+            dispatch(selectedTimeNoteDidCreate(data));
+            log(data, "timeLog create success!!!");
+          } catch {
+            isTempCreate = true;
+          }
+        }
+      }, 100);
+    } else {
+      return debounce(async () => {
+        if (selectedNoteRef.current == null) {
+          return;
+        }
+        let note: Note = {
+          id: selectedNoteRef.current.id,
+          title: selectedNoteRef.current.title,
+          contents: ref.current,
+        };
+        if ((note.id ?? 0) === 0 && note.title === "") {
+          // TODO: note.title === "" will be deleted
+          return;
+        }
+        log(note, "timeLogAPIwillChange");
+        try {
+          dispatch(noteDidUpdate(note));
+          let data = await saveTimeLogsAPI(note);
+          // dispatch(selectedTimeNoteDidCreate(data));
+          log(data, "timeLog save success!!!");
+        } catch {
+          isTempCreate = true;
+        }
+      }, 500);
+    }
+  }, [selectedNode?.id]);
+  callback();
+  useEffect(() => {
+    if (selectedNode != null) {
+      dispatch(timeNoteWillStart(selectedNode));
+    }
+  }, [selectedNode]);
+
+  // useRef(() => {});
   return (
     <div>
       {selectedNode == null ? (
@@ -29,17 +111,15 @@ export default function TimeLogEditor() {
             viewUpdate.changes.iterChanges(
               (fromA, toA, fromB, toB, inserted) => {
                 const isLineBreaked = inserted.iter(-1).next().lineBreak;
-                useDispatch(
-                  onTimeNoteChange(
-                    new TimeLogChanges(
-                      fromA,
-                      toA,
-                      fromB,
-                      toB,
-                      isLineBreaked,
-                      value
-                    )
-                  )
+                dispatch(
+                  onTimeNoteChange({
+                    fromA,
+                    toA,
+                    fromB,
+                    toB,
+                    isLineBreak: isLineBreaked,
+                    value,
+                  })
                 );
               }
             );
