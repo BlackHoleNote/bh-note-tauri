@@ -76,9 +76,7 @@ export default function TimeLogEditor() {
         }
         log(note, "timeLogAPIwillChange");
         try {
-          dispatch(noteDidUpdate(note));
           let data = await saveTimeLogsAPI(note);
-          // dispatch(selectedTimeNoteDidCreate(data));
           log(data, "timeLog save success!!!");
         } catch {
           isTempCreate = true;

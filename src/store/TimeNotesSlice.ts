@@ -39,16 +39,6 @@ export const timeNotesSlice = createSlice(
           console.log("will new state", service.state());
           (state as TimeNotesState).value = service.state();
         },
-        // increment: (state) => {
-        //   state.value += 1;
-        // },
-        // decrement: (state) => {
-        //   state.value -= 1;
-        // },
-        // // Use the PayloadAction type to declare the contents of `action.payload`
-        // incrementByAmount: (state, action: PayloadAction<number>) => {
-        //   state.value += action.payload;
-        // },
       },
     };
   })()

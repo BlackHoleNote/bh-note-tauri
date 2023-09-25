@@ -12,14 +12,16 @@ export default APIClient;
 
 // APIClient.get("https://www.google.com").then((res) => {});
 
+export const host = "http://34.105.33.139:8080";
+
 export async function getTimeLogs(): Promise<TimeLog[]> {
-  let res = await APIClient.get<TimeLog[]>("http://localhost:8080/notes");
+  let res = await APIClient.get<TimeLog[]>(`${host}/notes`);
   return res.data;
 }
 
 export async function createTimeLogsAPI(note: Note): Promise<Note> {
   let { data, status } = await APIClient.post<Note>(
-    "http://localhost:8080/v2/note/create",
+    `${host}/v2/note/create`,
     note
   );
   if (status === 200) {
@@ -30,7 +32,7 @@ export async function createTimeLogsAPI(note: Note): Promise<Note> {
 
 export async function saveTimeLogsAPI(note: Note): Promise<Note> {
   let { data, status } = await APIClient.post<Note>(
-    "http://localhost:8080/v2/note/save",
+    `${host}/v2/note/save`,
     note
   );
   if (status === 200) {
@@ -42,7 +44,7 @@ export async function saveTimeLogsAPI(note: Note): Promise<Note> {
 // Define a service using a base URL and expected endpoints
 export const timeLogApi = createApi({
   reducerPath: "timeLogApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:8080/v2/" }),
+  baseQuery: fetchBaseQuery({ baseUrl: `${host}/v2/` }),
   endpoints: (builder) => ({
     getAllNotes: builder.query<Note[], string>({
       query: () => `notes`,
