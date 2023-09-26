@@ -14,13 +14,13 @@ export default APIClient;
 
 export const host = "http://34.105.33.139:8080";
 
-export async function getTimeLogs(): Promise<TimeLog[]> {
-  let res = await APIClient.get<TimeLog[]>(`${host}/notes`);
-  return res.data;
-}
+// export async function getTimeLogs(): Promise<TimeLog[]> {
+//   let res = await APIClient.get<TimeLog[]>(`${host}/notes`);
+//   return res.data;
+// }
 
-export async function createTimeLogsAPI(note: Note): Promise<Note> {
-  let { data, status } = await APIClient.post<Note>(
+export async function createTimeLogsAPI(note: Note): Promise<SaveNoteDTO> {
+  let { data, status } = await APIClient.post<SaveNoteDTO>(
     `${host}/v2/note/create`,
     note
   );
@@ -30,8 +30,8 @@ export async function createTimeLogsAPI(note: Note): Promise<Note> {
   throw new Error("failed to create note");
 }
 
-export async function saveTimeLogsAPI(note: Note): Promise<Note> {
-  let { data, status } = await APIClient.post<Note>(
+export async function saveTimeLogsAPI(note: Note): Promise<SaveNoteDTO> {
+  let { data, status } = await APIClient.post<SaveNoteDTO>(
     `${host}/v2/note/save`,
     note
   );

@@ -91,7 +91,7 @@ function App() {
         <div className="splitContainer container1 w-[40] bg-[#eeeeee]"></div>
         <TimeLogList />
         <div className="divider w-[3px]"></div>
-        <div className="splitContainer container2 bg-[#e7e750]">
+        <div className="splitContainer container2 bg-[#eeeeee]">
           <NoteList />
           {/* <p>준</p>
             <p>비</p>

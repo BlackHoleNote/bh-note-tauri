@@ -5,11 +5,8 @@ import { GoFile, GoFileDirectory } from "react-icons/go";
 import TreeView, { INode, flattenTree } from "react-accessible-treeview";
 import "./NoteList.css";
 import { log } from "./log";
-import {
-  IFlatMetadata,
-  ITreeNode,
-} from "react-accessible-treeview/dist/TreeView/utils";
-import { getTimeLogs, useGetAllNotesQuery } from "./repository/APIClient";
+import { IFlatMetadata } from "react-accessible-treeview/dist/TreeView/utils";
+import { useGetAllNotesQuery } from "./repository/APIClient";
 import { File, FileVisitor, Folder, Note, RootFolder } from "./Entity/Note";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import {
@@ -22,45 +19,45 @@ import {
 import { increment } from "./store/CounterSlice";
 import { event } from "@tauri-apps/api";
 
-class FileVisitorImpl implements FileVisitor<ITreeNode<FileViewModel>> {
-  node: ITreeNode<FileViewModel> = { name: "" };
+// class FileVisitorImpl implements FileVisitor<ITreeNode<FileViewModel>> {
+//   node: ITreeNode<FileViewModel> = { name: "" };
 
-  visitFolder(folder: Folder): ITreeNode<FileViewModel> {
-    const children = folder.childs.map((note) => {
-      return this.visitFile(note);
-    });
+//   visitFolder(folder: Folder): ITreeNode<FileViewModel> {
+//     const children = folder.childs.map((note) => {
+//       return this.visitFile(note);
+//     });
 
-    return this.makeFile(folder, children);
-  }
+//     return this.makeFile(folder, children);
+//   }
 
-  visitNote(note: Note): ITreeNode<FileViewModel> {
-    return this.makeFile(note);
-  }
+//   visitNote(note: Note): ITreeNode<FileViewModel> {
+//     return this.makeFile(note);
+//   }
 
-  visitFile(file: File): ITreeNode<FileViewModel> {
-    if ((file as Folder).childs != undefined)
-      return this.visitFolder(file as Folder);
-    return this.makeFile(file);
-  }
+//   visitFile(file: File): ITreeNode<FileViewModel> {
+//     if ((file as Folder).childs != undefined)
+//       return this.visitFolder(file as Folder);
+//     return this.makeFile(file);
+//   }
 
-  makeFile(
-    file: File,
-    children: ITreeNode<FileViewModel>[] = []
-  ): ITreeNode<FileViewModel> {
-    return {
-      id: file.id,
-      name: file.title,
-      metadata: new FileViewModel(file?.id ?? 0, file.title),
-      children: children,
-    };
-  }
-}
+//   makeFile(
+//     file: File,
+//     children: ITreeNode<FileViewModel>[] = []
+//   ): ITreeNode<FileViewModel> {
+//     return {
+//       id: file.id,
+//       name: file.title,
+//       metadata: new FileViewModel(file?.id ?? 0, file.title),
+//       children: children,
+//     };
+//   }
+// }
 
-function makeData(viewModel: Folder): INode<FileViewModel>[] {
-  const visitor = new FileVisitorImpl();
+// function makeData(viewModel: Folder): INode<FileViewModel>[] {
+//   const visitor = new FileVisitorImpl();
 
-  return flattenTree(visitor.visitFolder(viewModel));
-}
+//   return flattenTree(visitor.visitFolder(viewModel));
+// }
 interface FolderIconProps {
   isOpen: boolean;
 }
@@ -108,13 +105,12 @@ export default function NoteList() {
   const dispatch = useAppDispatch();
   return (
     <div className="note-list">
-      <h1>{count}</h1>
       <div className="flex justify-end">
-        <button onClick={() => dispatch(addNewNotes())}>
-          <GoFileDirectory clasName="icon" />
-        </button>
         <button onClick={() => dispatch(increment())}>
           <GoFile className="icon" />
+        </button>
+        <button className="" onClick={() => dispatch(addNewNotes())}>
+          <GoFile clasName="icon" />
         </button>
       </div>
 
@@ -128,10 +124,8 @@ export default function NoteList() {
                 dispatch(selectNode(element));
               }}
               className={
-                selectedNode?.id == element?.id
-                  ? "bg-cyan-400"
-                  : "" +
-                    "w-full px-4 py-2 font-medium text-left border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white"
+                (selectedNode?.id == element?.id ? "bg-cyan-400" : "") +
+                "w-full px-4 py-2 font-medium text-left border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white"
               }
             >
               {element.title}

@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "./app";
-import { createTimeLogs, useGetAllNotesQuery } from "../repository/APIClient";
 
 // Define a type for the slice state
 interface CounterState {
