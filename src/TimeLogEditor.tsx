@@ -28,7 +28,6 @@ export default function TimeLogEditor() {
   selectedNoteRef.current = selectedNode;
 
   const callback = useMemo(() => {
-    log(selectedNode, "callback created!!!!!!!!!!!!!❌");
     if (selectedNode === null) {
       return () => {};
     }
@@ -49,12 +48,15 @@ export default function TimeLogEditor() {
           return;
         }
         if (isTempType && isTempCreate) {
-          log(note, "debounce timeLogApi.endpoints API will call");
+          log({
+            object: note,
+            customMessage: "debounce timeLogApi.endpoints API will call",
+          });
           try {
             isTempCreate = false;
             let data = await createTimeLogsAPI(note);
             dispatch(selectedTimeNoteDidCreate(data));
-            log(data, "timeLog create success!!!");
+            log({ object: data, customMessage: "timeLog create success!!!" });
           } catch {
             isTempCreate = true;
           }
@@ -74,10 +76,10 @@ export default function TimeLogEditor() {
           // TODO: note.title === "" will be deleted
           return;
         }
-        log(note, "timeLogAPIwillChange");
+        log({ object: note, customMessage: "timeLogAPIwillChange" });
         try {
           let data = await saveTimeLogsAPI(note);
-          log(data, "timeLog save success!!!");
+          log({ object: data, customMessage: "timeLog save success!!!" });
         } catch {
           isTempCreate = true;
         }

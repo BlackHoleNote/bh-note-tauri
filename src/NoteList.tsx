@@ -96,7 +96,7 @@ export default function NoteList() {
   const { data } = useGetAllNotesQuery("hi");
 
   useEffect(() => {
-    log(data, "data will changed: ");
+    log({ object: data, customMessage: "data will changed: " });
     if ((data ?? []).length > 0) {
       dispatch(loadNotes(data!));
     }

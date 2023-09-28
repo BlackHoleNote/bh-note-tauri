@@ -116,7 +116,10 @@ export class TimeLogsService {
   }
 
   public timeNoteWillChange(note: Note) {
-    log(note, `timeNoteWillChange ${note.contents === ""}`);
+    log({
+      object: note,
+      customMessage: `timeNoteWillChange ${note.contents === ""}`,
+    });
     if (note.contents === "") {
       this.timeLogs = [
         new TimeLog(0, `===\n${new Date().toLocaleString("kr")}\n`, new Date()),

@@ -55,7 +55,6 @@ export const noteListSlice = createSlice({
   reducers: {
     addNewNotes: (state) => {
       createNewFolder2(state);
-      log(state, "👿 before rendering");
     },
 
     addNewNote: (state) => {},
@@ -70,18 +69,15 @@ export const noteListSlice = createSlice({
     },
 
     selectNode: (state, action: PayloadAction<Note>) => {
-      log(action.payload, "note selected");
       state.selectedNode = action.payload;
     },
 
     selectedTimeNoteDidCreate: (state, action: PayloadAction<SaveNoteDTO>) => {
-      log(action.payload, "timeNoteDidCreate");
       let index = state.root.findIndex(
         (note) => note.id === action.payload.tempId
       );
       if (index !== -1) {
         state.root[index].id = action.payload.id;
-        log(state.root, "timeNoteRootTree Updated👻");
       }
       if (state.selectedNode !== null) {
         if (state.selectedNode.id === action.payload.tempId) {

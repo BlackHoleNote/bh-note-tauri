@@ -3,6 +3,7 @@ import { counterReducer } from "./CounterSlice";
 import { noteListReducer } from "./NoteListSlice";
 import { timeNotesReducer } from "./TimeNotesSlice";
 import { timeLogApi } from "../repository/APIClient";
+import { authReducer } from "./AuthSlice";
 // ...
 
 export const store = configureStore({
@@ -11,9 +12,7 @@ export const store = configureStore({
     noteList: noteListReducer,
     timeNotes: timeNotesReducer,
     timeLogApi: timeLogApi.reducer,
-    // posts: postsReducer,
-    // comments: commentsReducer,
-    // users: usersReducer,
+    auth: authReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(timeLogApi.middleware),

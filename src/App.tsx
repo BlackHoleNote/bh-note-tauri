@@ -5,15 +5,19 @@ import "./App.css";
 import "./index.css";
 import { hide } from "@tauri-apps/api/app";
 import Split from "react-split";
-import { emit } from "@tauri-apps/api/event";
+import { emit, listen } from "@tauri-apps/api/event";
 import NoteList from "./NoteList";
 import TimeLogList from "./TimeLogList";
 import TimeLogEditor from "./TimeLogEditor";
 import { log } from "./log";
+import { login, myAuth } from "./store/AuthSlice";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+// import { LogoutApp } from "/src/LogoutApp.jsx";
 
 function initResizer() {
   // const rightSide = resizer!.
-  log("resizer init");
+  log({ object: "resizer init" });
   const mouseDownHandler = (target: HTMLElement) => (e: MouseEvent) => {
     let initialX = e.clientX;
     let initialY = e.clientY;
@@ -68,23 +72,7 @@ function initResizer() {
   });
 }
 
-function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
-
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-    setGreetMsg(await invoke("greet", { name }));
-    await log("greeted");
-  }
-  useEffect(() => {
-    // initResizer();
-    log("App didMount");
-    return () => {
-      log("App didUnmount");
-    };
-  }, []);
-
+function LoginApp() {
   return (
     <div className="main">
       <div className="split-view hbox">
@@ -94,8 +82,8 @@ function App() {
         <div className="splitContainer container2 bg-[#eeeeee]">
           <NoteList />
           {/* <p>준</p>
-            <p>비</p>
-            <p>중</p> */}
+        <p>비</p>
+        <p>중</p> */}
           {/* <NoteList noteListPresentationService={container.resolve(NoteListPresentationService)}/> */}
         </div>
         <div className="divider w-[3px]"></div>
@@ -105,6 +93,68 @@ function App() {
         </div>
       </div>
     </div>
+  );
+}
+function LogoutApp() {
+  let params = {
+    client_id: "2118f23d195c18bff64c",
+    scope: "user",
+  };
+  const queryString = new URLSearchParams(params).toString();
+  let authUrl = `https://github.com/login/oauth/authorize?${queryString}`;
+
+  useEffect(() => {
+    let unlisten = () => {};
+    async function viewDidLoad() {
+      unlisten = await listen<string>("login/oauth/code", (event) => {
+        log({
+          object: event.payload,
+          customMessage: "code ㅇ받ㅇ",
+          logLevel: "debug",
+        });
+      });
+    }
+    viewDidLoad();
+
+    return unlisten();
+  }, []);
+
+  return (
+    <>
+      {/* {/* } */}
+      <a
+        className="w-40"
+        href={authUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <button onClick={() => {}}>"hit"</button>
+      </a>
+    </>
+  );
+}
+function App() {
+  const [greetMsg, setGreetMsg] = useState("");
+  const [name, setName] = useState("");
+  const [user, setUser] = useState(null);
+
+  const auth = useSelector(myAuth);
+
+  async function greet() {
+    // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
+    setGreetMsg(await invoke("greet", { name }));
+  }
+
+  useEffect(() => {
+    // initResizer();
+    return () => {};
+  }, []);
+
+  return (
+    <>
+      {auth ? <LoginApp /> : <LogoutApp />}
+      <div>log</div>
+    </>
   );
 }
 
