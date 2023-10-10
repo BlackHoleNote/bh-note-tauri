@@ -24,6 +24,11 @@ struct LogDTO {
     logLevel: Option<String>
 }
 
+#[derive(serde::Deserialize, Debug)]
+struct MockDeepLink {
+    url: String
+}
+
 #[tauri::command]
 fn greet(name: &str) -> String {
     format!("Hellssso, {}! You've been greeted from Rust!", name)
@@ -64,23 +69,32 @@ fn main() {
             });
 
             let handle = app.handle();
+            let customSchemeHandler = move |request: String| {
+                // mark: - deeplink를 parsing, code -> server post -> server authentification -> client logined
+            // dbg!(&request);
+            if let Some(code) = CustomSchemeURLParser::findGithubAuthCode(&request) {
+                debug!("{}", code);
+                let result = handle.emit_all("login/oauth/code", code);
+            } else if let Some(token) = CustomSchemeURLParser::login(&request) {
+                debug!("{:?}", token);
+                let result = handle.emit_all("login/jwt", &token);
+            } else {
+                error!("Invailid Custom Scheme call! {}", request);
+            }
+            // handle.emit_all("scheme-request-received", request).unwrap();
+            };
             let _ = tauri_plugin_deep_link::register(
                 "blackhole",
-                move |request| {
-                    // mark: - deeplink를 parsing, code -> server post -> server authentification -> client logined
-                // dbg!(&request);
-                if let Some(code) = CustomSchemeURLParser::findGithubAuthCode(&request) {
-                    debug!("{}", code);
-                    let result = handle.emit_all("login/oauth/code", code);
-                } else if let Some(token) = CustomSchemeURLParser::login(&request) {
-                    debug!("{:?}", token);
-                    let result = handle.emit_all("login/jwt", &token);
-                } else {
-                    error!("Invailid Custom Scheme call! {}", request);
-                }
-                // handle.emit_all("scheme-request-received", request).unwrap();
-                },
+                customSchemeHandler.clone(),
             );
+
+            if cfg!(debug_assertions) {
+                app.listen_global("mock_deeplink",move |event: tauri::Event| {
+                    let deserialized: MockDeepLink = serde_json::from_str(event.payload().unwrap()).unwrap();
+                    println!("got event-name with payload2 {:?}", deserialized);
+                    customSchemeHandler(deserialized.url);
+                });
+            }
             // unlisten to the event using the `id` returned on the `listen_global` function
             // a `once_global` API is also exposed on the `App` struct
 

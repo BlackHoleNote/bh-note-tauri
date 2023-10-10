@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { login } from "./store/AuthSlice";
-import { listen } from "@tauri-apps/api/event";
+import { emit, listen } from "@tauri-apps/api/event";
 import { log } from "./log";
 
 export function LogoutApp() {
@@ -44,6 +44,15 @@ export function LogoutApp() {
         }}
       >
         슈퍼로그인
+      </button>
+      <button
+        onClick={() => {
+          emit("mock_deeplink", {
+            url: "blackhole://login?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzaWxiYXBhZEBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTY5Njk0MzY0NSwiZXhwIjoxNjk2OTQ0MjQ1fQ.dWqEuaDsRg3rnDnhdhHIpbmN7P6s4bHjXGRogu7vvj4&refreshToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzaWxiYXBhZEBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTY5Njk0MzY0NSwiZXhwIjoxNzA0NzE5NjQ1fQ.YjlXrzFz-C5SDlou2CcZdBzTpUTPF4p_4wyw2-Fm63A",
+          });
+        }}
+      >
+        목ㄹ딥ㄹ크
       </button>
     </>
   );
