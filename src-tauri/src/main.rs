@@ -71,8 +71,10 @@ fn main() {
                 // dbg!(&request);
                 if let Some(code) = CustomSchemeURLParser::findGithubAuthCode(&request) {
                     debug!("{}", code);
-                    // handle.emit_all(event, payload)
                     let result = handle.emit_all("login/oauth/code", code);
+                } else if let Some(token) = CustomSchemeURLParser::login(&request) {
+                    debug!("{:?}", token);
+                    let result = handle.emit_all("login/jwt", &token);
                 } else {
                     error!("Invailid Custom Scheme call! {}", request);
                 }
