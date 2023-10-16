@@ -3,6 +3,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "./app";
 import { TimeLogChanges, TimeLogsService } from "../Entity/TimeLog";
 import { Note } from "../Entity/Note";
+import { LogoutReason, logout } from "./AuthSlice";
 
 // Define a type for the slice state
 interface TimeNotesState {

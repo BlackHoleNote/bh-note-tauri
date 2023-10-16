@@ -8,8 +8,14 @@ interface AuthState {
   auth?: Auth;
 }
 
+export interface Token {
+  token: String;
+  refreshToken: String;
+}
+
 interface Auth {
-  id: number;
+  id?: number;
+  token: Token;
 }
 
 // Define the initial state using that type
@@ -20,18 +26,19 @@ export const authSlice = createSlice({
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
-    login: (state, action: PayloadAction<Auth>) => {
-      state.auth = action.payload;
+    login: (state, action: PayloadAction<Token>) => {
+      state.auth = { token: action.payload };
+      log({ object: state.auth, customMessage: "로그인 완료" });
     },
 
-    logout: (state, action: PayloadAction<Reason>) => {
+    logout: (state, action: PayloadAction<LogoutReason>) => {
       log({ object: action.payload, logLevel: "debug" });
       state.auth = undefined;
     },
   },
 });
 
-export enum Reason {
+export enum LogoutReason {
   User,
   Forced,
   TokenExpired,

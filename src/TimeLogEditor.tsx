@@ -10,7 +10,9 @@ import {
   createTimeLogsAPI,
   saveTimeLogsAPI,
   timeLogApi,
+  useCreateNotesMutation,
   useGetAllNotesQuery,
+  useSaveNotesMutation,
 } from "./repository/APIClient";
 import { debounce } from "lodash";
 import { Note } from "./Entity/Note";
@@ -23,11 +25,14 @@ export default function TimeLogEditor() {
   const previous = useRef(selectedNode);
   let timeNotes = useAppSelector((state) => state.timeNotes.value);
   const ref = useRef(timeNotes);
-  ref.current = timeNotes;
+
   const selectedNoteRef = useRef(selectedNode);
   selectedNoteRef.current = selectedNode;
-
+  const [createNote, {}] = useCreateNotesMutation();
+  const [saveNoteApi, {status}] = useSaveNotesMutation({fixedCacheKey: "server.state"});
+  
   const callback = useMemo(() => {
+    log({object: "call!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"});
     if (selectedNode === null) {
       return () => {};
     }
@@ -54,7 +59,7 @@ export default function TimeLogEditor() {
           });
           try {
             isTempCreate = false;
-            let data = await createTimeLogsAPI(note);
+            let data = await createNote(note).unwrap();
             dispatch(selectedTimeNoteDidCreate(data));
             log({ object: data, customMessage: "timeLog create success!!!" });
           } catch {
@@ -77,16 +82,20 @@ export default function TimeLogEditor() {
           return;
         }
         log({ object: note, customMessage: "timeLogAPIwillChange" });
+        // log({object: status});
         try {
-          let data = await saveTimeLogsAPI(note);
+          let data = await saveNoteApi(note);
           log({ object: data, customMessage: "timeLog save success!!!" });
         } catch {
           isTempCreate = true;
         }
-      }, 500);
+      }, 1000);
     }
   }, [selectedNode?.id]);
-  callback();
+  if (ref.current !== timeNotes) {
+    ref.current = timeNotes;
+    callback();
+  }
   useEffect(() => {
     if (selectedNode != null) {
       dispatch(timeNoteWillStart(selectedNode));

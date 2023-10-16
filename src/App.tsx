@@ -7,7 +7,7 @@ import { hide } from "@tauri-apps/api/app";
 import Split from "react-split";
 import { emit, listen } from "@tauri-apps/api/event";
 import NoteList from "./NoteList";
-import TimeLogList from "./TimeLogList";
+import VerticalMenuList from "./VerticalMenuList";
 import TimeLogEditor from "./TimeLogEditor";
 import { log } from "./log";
 import { login, myAuth } from "./store/AuthSlice";
@@ -78,7 +78,7 @@ function LoginApp() {
     <div className="main">
       <div className="split-view hbox">
         <div className="splitContainer container1 w-[40] bg-[#eeeeee]"></div>
-        <TimeLogList />
+        <VerticalMenuList />
         <div className="divider w-[3px]"></div>
         <div className="splitContainer container2 bg-[#eeeeee]">
           <NoteList />

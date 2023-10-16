@@ -14,6 +14,7 @@ import { counterReducer } from "./CounterSlice";
 import _, { random, uniqueId } from "lodash";
 import { INode } from "react-accessible-treeview";
 import { IFlatMetadata } from "react-accessible-treeview/dist/TreeView/utils";
+import { LogoutReason, logout } from "./AuthSlice";
 
 export class FileViewModel implements IFlatMetadata {
   constructor(public id: number, public title: string) {}
@@ -85,6 +86,12 @@ export const noteListSlice = createSlice({
         }
       }
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(logout, (state, action: PayloadAction<LogoutReason>) => {
+      state.root = [];
+      state.selectedNode = null;
+    });
   },
 });
 

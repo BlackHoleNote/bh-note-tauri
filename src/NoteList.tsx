@@ -18,6 +18,7 @@ import {
 } from "./store/NoteListSlice";
 import { increment } from "./store/CounterSlice";
 import { event } from "@tauri-apps/api";
+import { Button } from "@material-tailwind/react";
 
 // class FileVisitorImpl implements FileVisitor<ITreeNode<FileViewModel>> {
 //   node: ITreeNode<FileViewModel> = { name: "" };
@@ -93,7 +94,7 @@ export default function NoteList() {
   const count = useAppSelector((state) => state.counter.value);
   const rootNote = useAppSelector((state) => state.noteList.root);
   const selectedNode = useAppSelector((state) => state.noteList.selectedNode);
-  const { data } = useGetAllNotesQuery("hi");
+  const { data } = useGetAllNotesQuery();
 
   useEffect(() => {
     log({ object: data, customMessage: "data will changed: " });
@@ -117,7 +118,7 @@ export default function NoteList() {
       <ul className="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
         {(rootNote ?? []).map((element) => {
           return (
-            <button
+            <Button
               type="button"
               onClick={(target) => {
                 target.currentTarget.focus();
@@ -129,7 +130,7 @@ export default function NoteList() {
               }
             >
               {element.title}
-            </button>
+            </Button>
           );
         })}
         {/* <li className="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600">

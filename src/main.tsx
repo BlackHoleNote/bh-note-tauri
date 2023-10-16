@@ -5,6 +5,7 @@ import "./styles.css";
 import { emit } from "@tauri-apps/api/event";
 import { Provider } from "react-redux";
 import { store } from "./store/app";
+import { ThemeProvider } from "@material-tailwind/react";
 
 document.addEventListener("keydown", (e: KeyboardEvent) => {
   console.dir(`metaKey:${e.metaKey} key:${e.key}`);
@@ -14,7 +15,9 @@ document.addEventListener("keydown", (e: KeyboardEvent) => {
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   // <React.StrictMode>
   <Provider store={store}>
-    <App />
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
   </Provider>
   // </React.StrictMode>
 );

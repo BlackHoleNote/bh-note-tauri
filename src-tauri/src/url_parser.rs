@@ -1,4 +1,5 @@
 use log::kv::ToValue;
+use jsonwebtoken::{decode, DecodingKey};
 
 pub struct CustomSchemeURLParser {
 
@@ -7,7 +8,8 @@ pub struct CustomSchemeURLParser {
 #[derive(Clone, serde::Deserialize, serde::Serialize, Debug)]
 pub struct Token {
     token: String,
-    refesh_token: String
+    refesh_token: String,
+    // id: String
 }
 
 impl CustomSchemeURLParser {
@@ -39,6 +41,7 @@ impl CustomSchemeURLParser {
                         if let Some(refresh_token) = urlStr.query_pairs().find(|x| {
                             x.0 == "refreshToken"
                         }) {
+                            // let id = decode(&(token.1), &DecodingKey::from_secret(secret));
                             return Some(Token { token: token.1.to_string(), refesh_token: refresh_token.1.to_string() });
                         }
                     }
