@@ -2,17 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "./app";
 import {
-  FileVisitor,
-  Folder,
   Note,
-  RootFolder,
   SaveNoteDTO,
 } from "../Entity/Note";
-import { log } from "../log";
-import { combineReducers } from "redux";
-import { counterReducer } from "./CounterSlice";
 import _, { random, uniqueId } from "lodash";
-import { INode } from "react-accessible-treeview";
 import { IFlatMetadata } from "react-accessible-treeview/dist/TreeView/utils";
 import { LogoutReason, logout } from "./AuthSlice";
 
