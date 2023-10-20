@@ -95,9 +95,11 @@ const baseQueryWithReauth: BaseQueryFn<
 export const timeLogApi = createApi({
   reducerPath: "timeLogApi",
   baseQuery: baseQueryWithReauth,
+  tagTypes: ["getAll"],
   endpoints: (builder) => ({
     getAllNotes: builder.query<Note[], void>({
       query: () => `v2/notes`,
+      providesTags: ["getAll"],
     }),
     createNotes: builder.mutation<SaveNoteDTO, Note>({
       query: (arg) => ({ url: `v2/note/create`, method: "POST", body: arg }),

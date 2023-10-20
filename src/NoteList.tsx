@@ -18,7 +18,7 @@ import {
 } from "./store/NoteListSlice";
 import { increment } from "./store/CounterSlice";
 import { event } from "@tauri-apps/api";
-import { Button } from "@material-tailwind/react";
+import { Button, IconButton } from "@material-tailwind/react";
 
 // class FileVisitorImpl implements FileVisitor<ITreeNode<FileViewModel>> {
 //   node: ITreeNode<FileViewModel> = { name: "" };
@@ -94,7 +94,9 @@ export default function NoteList() {
   const count = useAppSelector((state) => state.counter.value);
   const rootNote = useAppSelector((state) => state.noteList.root);
   const selectedNode = useAppSelector((state) => state.noteList.selectedNode);
-  const { data } = useGetAllNotesQuery();
+  const { data } = useGetAllNotesQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
 
   useEffect(() => {
     log({ object: data, customMessage: "data will changed: " });
@@ -106,31 +108,33 @@ export default function NoteList() {
   const dispatch = useAppDispatch();
   return (
     <div className="note-list">
-      <div className="flex justify-end">
-        <button onClick={() => dispatch(increment())}>
-          <GoFile className="icon" />
-        </button>
-        <button className="" onClick={() => dispatch(addNewNotes())}>
+      <div className="flex justify-between">
+        <p className="self-center">목록</p>
+        <IconButton
+          color="amber"
+          className=""
+          onClick={() => dispatch(addNewNotes())}
+        >
           <GoFile clasName="icon" />
-        </button>
+        </IconButton>
       </div>
 
       <ul className="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
         {(rootNote ?? []).map((element) => {
           return (
-            <Button
+            <button
               type="button"
               onClick={(target) => {
                 target.currentTarget.focus();
                 dispatch(selectNode(element));
               }}
               className={
-                (selectedNode?.id == element?.id ? "bg-cyan-400" : "") +
-                "w-full px-4 py-2 font-medium text-left border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white"
+                (selectedNode?.id == element?.id ? "bg-cyan-400 " : "") +
+                "w-full shadow-none font-medium text-left border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:ring-2 focus:outline-none dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white "
               }
             >
               {element.title}
-            </Button>
+            </button>
           );
         })}
         {/* <li className="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600">

@@ -1,13 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "./app";
-import {
-  Note,
-  SaveNoteDTO,
-} from "../Entity/Note";
+import { Note, SaveNoteDTO } from "../Entity/Note";
 import _, { random, uniqueId } from "lodash";
 import { IFlatMetadata } from "react-accessible-treeview/dist/TreeView/utils";
 import { LogoutReason, logout } from "./AuthSlice";
+import { log } from "../log";
 
 export class FileViewModel implements IFlatMetadata {
   constructor(public id: number, public title: string) {}
@@ -55,7 +53,7 @@ export const noteListSlice = createSlice({
 
     loadNotes: (state, action: PayloadAction<Note[]>) => {
       const notes = action.payload;
-      state.root = state.root.concat(notes);
+      state.root = notes;
     },
     // Use the PayloadAction type to declare the contents of `action.payload`
     incrementByAmount: (state, action: PayloadAction<number>) => {
@@ -83,6 +81,8 @@ export const noteListSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(logout, (state, action: PayloadAction<LogoutReason>) => {
       state.root = [];
+      log({ object: state.root, customMessage: "root 제거 완료" });
+      console.log("root 제거");
       state.selectedNode = null;
     });
   },

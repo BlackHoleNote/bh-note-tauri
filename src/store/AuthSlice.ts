@@ -32,7 +32,11 @@ export const authSlice = createSlice({
     },
 
     logout: (state, action: PayloadAction<LogoutReason>) => {
-      log({ object: action.payload, logLevel: "debug" });
+      log({
+        object: action.payload,
+        customMessage: "로그아웃 완료",
+        logLevel: "debug",
+      });
       state.auth = undefined;
     },
   },
