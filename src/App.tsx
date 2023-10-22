@@ -109,7 +109,7 @@ function App() {
   return (
     <>
       {auth ? <LoginApp /> : <LogoutApp />}
-      <div>log</div>
+      {/* <div>log</div> */}
     </>
   );
 }

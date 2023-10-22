@@ -1,14 +1,15 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useAppSelector } from "./store/hooks";
-import ReactCodeMirror from "@uiw/react-codemirror";
-import { vim } from "@replit/codemirror-vim";
+import ReactCodeMirror, {
+  Extension,
+  useCodeMirror,
+} from "@uiw/react-codemirror";
+import { CodeMirror, Vim, vim } from "@replit/codemirror-vim";
 import { log } from "./log";
 import { useDispatch } from "react-redux";
 import { onTimeNoteChange, timeNoteWillStart } from "./store/TimeNotesSlice";
 import { TimeLogChanges } from "./Entity/TimeLog";
 import {
-  createTimeLogsAPI,
-  saveTimeLogsAPI,
   timeLogApi,
   useCreateNotesMutation,
   useGetAllNotesQuery,
@@ -29,10 +30,25 @@ export default function TimeLogEditor() {
   const selectedNoteRef = useRef(selectedNode);
   selectedNoteRef.current = selectedNode;
   const [createNote, {}] = useCreateNotesMutation();
-  const [saveNoteApi, {status}] = useSaveNotesMutation({fixedCacheKey: "server.state"});
-  
+  const [saveNoteApi, { status }] = useSaveNotesMutation({
+    fixedCacheKey: "server.state",
+  });
+
+  useEffect(() => {
+    useCodeMirror({});
+    CodeMirror.vimKey(e);
+    CodeMirror.on(editor, "vim-keypress", function (key) {
+      keys = keys + key;
+      commandDisplay.innerHTML = keys;
+    });
+    CodeMirror.on(editor, "vim-command-done", function (e) {
+      keys = "";
+      commandDisplay.innerHTML = keys;
+    });
+  }, []);
+
   const callback = useMemo(() => {
-    log({object: "call!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"});
+    log({ object: "call!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" });
     if (selectedNode === null) {
       return () => {};
     }
@@ -102,7 +118,6 @@ export default function TimeLogEditor() {
     }
   }, [selectedNode]);
 
-  // useRef(() => {});
   return (
     <div>
       {selectedNode == null ? (
