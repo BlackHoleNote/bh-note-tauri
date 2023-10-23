@@ -141,9 +141,8 @@ export class TimeLogsService {
     // mutable.text.slice(0, fromA) +
     // value.slice(fromB, toB) +
     // mutable.text.slice(toA);
-
-    const isInserted = fromA == toA && fromB < toB && isLineBreak;
-    if (isInserted) {
+    const isLineBreakInserted = fromA == toA && fromB < toB && isLineBreak;
+    if (isLineBreakInserted) {
       const target = value.slice(fromB - 3, fromB);
       if (target === "===") {
         mutable =

@@ -57,7 +57,7 @@ export const host = !PRODUCTION
 
 // Define a service using a base URL and expected endpoints
 const baseQuery = fetchBaseQuery({
-  baseUrl: `${import.meta.env.HOST}/`,
+  baseUrl: `${host}/`,
   prepareHeaders: (headers, api) => {
     console.log(import.meta.env.HOST);
     headers.set(

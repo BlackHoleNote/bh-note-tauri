@@ -40,7 +40,7 @@ function DebugTool(props: { className: string }) {
   const tokenMock = useRef<HTMLInputElement>(null);
   let dispatch = useDispatch();
 
-  const { data: token } = useAdminTokenQuery();
+  const { data: token, refetch } = useAdminTokenQuery();
 
   useEffect(() => {
     if (token !== undefined) {
@@ -89,6 +89,7 @@ function DebugTool(props: { className: string }) {
         className="rounded-md"
         onClick={(e) => {
           e.preventDefault();
+          refetch();
         }}
       >
         {" "}

@@ -34,18 +34,18 @@ export default function TimeLogEditor() {
     fixedCacheKey: "server.state",
   });
 
-  useEffect(() => {
-    useCodeMirror({});
-    CodeMirror.vimKey(e);
-    CodeMirror.on(editor, "vim-keypress", function (key) {
-      keys = keys + key;
-      commandDisplay.innerHTML = keys;
-    });
-    CodeMirror.on(editor, "vim-command-done", function (e) {
-      keys = "";
-      commandDisplay.innerHTML = keys;
-    });
-  }, []);
+  // useEffect(() => {
+  //   useCodeMirror({});
+  //   CodeMirror.vimKey(e);
+  //   CodeMirror.on(editor, "vim-keypress", function (key) {
+  //     keys = keys + key;
+  //     commandDisplay.innerHTML = keys;
+  //   });
+  //   CodeMirror.on(editor, "vim-command-done", function (e) {
+  //     keys = "";
+  //     commandDisplay.innerHTML = keys;
+  //   });
+  // }, []);
 
   const callback = useMemo(() => {
     log({ object: "call!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" });
@@ -129,9 +129,7 @@ export default function TimeLogEditor() {
           height="100vh"
           extensions={[vim()]}
           onChange={(value, viewUpdate) => {
-            // log(viewUpdate.changes.iterChangedRanges);
-            // console.log(viewUpdate.changes.apply(Text("hello world!"))))))));
-            // viewUpdate.c
+            console.log(viewUpdate.state, timeNotes, viewUpdate.transactions);
             viewUpdate.changes.iterChanges(
               (fromA, toA, fromB, toB, inserted) => {
                 const isLineBreaked = inserted.iter(-1).next().lineBreak;
@@ -147,9 +145,6 @@ export default function TimeLogEditor() {
                 );
               }
             );
-            // console.log(viewUpdate.changes.desc.newLength);
-            // console.log(viewUpdate.transactions);
-            // console.log("viewUpdate:", viewUpdate.changes);
           }}
           onStatistics={(value) => {
             // console.log("onStatistics:", value);

@@ -38,7 +38,7 @@ function createNewFolder2(state: NoteListState) {
   // if (state.selectedNode == null) {
   //   state.root.childs.push(createNewFolder("/"));
   // } else {
-  state.root.push(createNewNote("Untitled"));
+  state.root = [createNewNote("Untitled")].concat(state.root);
 }
 
 export const noteListSlice = createSlice({
