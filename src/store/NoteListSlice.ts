@@ -6,6 +6,8 @@ import _, { random, uniqueId } from "lodash";
 import { IFlatMetadata } from "react-accessible-treeview/dist/TreeView/utils";
 import { LogoutReason, logout } from "./AuthSlice";
 import { log } from "../log";
+import { timeLogApi, useSaveNotesMutation } from "../repository/APIClient";
+import { act } from "react-dom/test-utils";
 
 export class FileViewModel implements IFlatMetadata {
   constructor(public id: number, public title: string) {}
@@ -35,10 +37,14 @@ function createNewNote(title: string): Note {
 }
 
 function createNewFolder2(state: NoteListState) {
-  // if (state.selectedNode == null) {
-  //   state.root.childs.push(createNewFolder("/"));
-  // } else {
   state.root = [createNewNote("Untitled")].concat(state.root);
+}
+
+function timeLogDidChanged(state: NoteListState, note: Note) {
+  let index = state.root.findIndex((_note) => _note.id === note.id);
+  if (index !== -1) {
+    state.root[index] = note;
+  }
 }
 
 export const noteListSlice = createSlice({
@@ -61,7 +67,15 @@ export const noteListSlice = createSlice({
     },
 
     selectNode: (state, action: PayloadAction<Note>) => {
-      state.selectedNode = action.payload;
+      let index = state.root.findIndex((note) => note.id === action.payload.id);
+      if (index !== -1) {
+        console.log(selectNode);
+        state.selectedNode = state.root[index];
+      }
+    },
+
+    timeNoteDidChanged: (state, action: PayloadAction<Note>) => {
+      timeLogDidChanged(state, action.payload);
     },
 
     selectedTimeNoteDidCreate: (state, action: PayloadAction<SaveNoteDTO>) => {
@@ -85,6 +99,13 @@ export const noteListSlice = createSlice({
       console.log("root 제거");
       state.selectedNode = null;
     });
+    builder.addMatcher(
+      timeLogApi.endpoints.saveNotes.matchPending,
+      (state, action) => {
+        // timeNoteDidChanged(action.meta.arg.originalArgs);
+        timeLogDidChanged(state, action.meta.arg.originalArgs);
+      }
+    );
   },
 });
 
@@ -95,6 +116,7 @@ export const {
   selectNode,
   loadNotes,
   selectedTimeNoteDidCreate,
+  timeNoteDidChanged,
 } = noteListSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type

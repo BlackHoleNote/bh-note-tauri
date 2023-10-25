@@ -16,7 +16,7 @@ import {
   loadNotes,
   selectNode,
 } from "./store/NoteListSlice";
-import { increment } from "./store/CounterSlice";
+import { increment } from "./store/SliceExample";
 import { event } from "@tauri-apps/api";
 import { Button, IconButton } from "@material-tailwind/react";
 

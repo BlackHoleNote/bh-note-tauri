@@ -27,13 +27,15 @@
     "react-redux": "^8.1.2",
     "react-split": "^2.0.14",
     "react-split-grid": "^1.0.4",
-    "react-split-pane": "^2.0.3"
+    "react-split-pane": "^2.0.3",
+    "redux-logger": "^3.0.6"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1.4.0",
     "@types/node": "^20.8.7",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
+    "@types/redux-logger": "^3.0.11",
     "@vitejs/plugin-react": "^4.0.3",
     "autoprefixer": "^10.4.15",
     "postcss": "^8.4.29",
