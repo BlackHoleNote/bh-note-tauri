@@ -1,11 +1,21 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { AnyAction, Middleware, configureStore } from "@reduxjs/toolkit";
 import { counterReducer } from "./SliceExample";
 import { noteListReducer } from "./NoteListSlice";
 import { timeNotesReducer } from "./TimeNotesSlice";
 import { timeLogApi } from "../repository/APIClient";
 import { authReducer } from "./AuthSlice";
 import { logger } from "redux-logger";
+import { log } from "../log";
 // ...
+
+const customLogger: Middleware = (store) => (next) => (action) => {
+  log({
+    object: action.type,
+    customMessage: "next action type",
+    consoleLog: false,
+  });
+  next(action);
+};
 
 export const store = configureStore({
   reducer: {
@@ -16,7 +26,10 @@ export const store = configureStore({
     auth: authReducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(timeLogApi.middleware).concat(logger),
+    getDefaultMiddleware()
+      .concat(timeLogApi.middleware)
+      .concat(logger)
+      .concat(customLogger),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

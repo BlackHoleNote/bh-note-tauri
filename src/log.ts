@@ -12,10 +12,13 @@ export function log(args: {
   customMessage?: String;
   caller?: String;
   logLevel?: LogLevel;
+  consoleLog?: boolean;
 }) {
-  let { object, customMessage, caller, logLevel } = args;
+  let { object, customMessage, caller, logLevel, consoleLog } = args;
   let string = JSON.stringify(object);
-  console.log(`${customMessage ?? ""}!!! ` + string);
+  if (consoleLog !== false) {
+    console.log(`${customMessage ?? ""}!!! ` + string);
+  }
   emit("console_log", {
     title: customMessage === "" ? null : `${customMessage}!!!`,
     string: string ?? "",

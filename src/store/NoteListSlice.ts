@@ -102,7 +102,6 @@ export const noteListSlice = createSlice({
     builder.addMatcher(
       timeLogApi.endpoints.saveNotes.matchPending,
       (state, action) => {
-        // timeNoteDidChanged(action.meta.arg.originalArgs);
         timeLogDidChanged(state, action.meta.arg.originalArgs);
       }
     );
