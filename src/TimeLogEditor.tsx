@@ -129,7 +129,12 @@ export default function TimeLogEditor() {
           height="100vh"
           extensions={[vim()]}
           onChange={(value, viewUpdate) => {
-            console.log(viewUpdate.state, timeNotes, viewUpdate.transactions);
+            const lineAt = (pos: number) => {
+              console.log(
+                `doc: ${pos} ${viewUpdate.state.doc.lineAt(pos).number}`
+              );
+              return viewUpdate.state.doc.lineAt(pos).text;
+            };
             viewUpdate.changes.iterChanges(
               (fromA, toA, fromB, toB, inserted) => {
                 const isLineBreaked = inserted.iter(-1).next().lineBreak;
@@ -141,6 +146,7 @@ export default function TimeLogEditor() {
                     toB,
                     isLineBreak: isLineBreaked,
                     value,
+                    lineBeforeB: lineAt(fromB - 1),
                   })
                 );
               }

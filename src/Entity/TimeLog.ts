@@ -10,6 +10,7 @@
 //   //   );
 //   // }
 
+import { map } from "lodash";
 import { log } from "../log";
 import { Note } from "./Note";
 
@@ -130,26 +131,30 @@ export class TimeLogsService {
   }
 
   public timeLogDidChanges(changes: TimeLogChanges) {
-    let { fromA, toA, fromB, toB, isLineBreak, value } = changes;
-    const diff = toB - fromB - (toA - fromA);
-
-    // let mutable = { ...this.timeLogs[0] };
-
-    // let mutable = this.timeLogs[0];
+    let { fromA, toA, fromB, toB, isLineBreak, value, lineBeforeB } = changes;
     let mutable = value.slice(0);
-    // mutable.text = value;
-    // mutable.text.slice(0, fromA) +
-    // value.slice(fromB, toB) +
-    // mutable.text.slice(toA);
     const isLineBreakInserted = fromA == toA && fromB < toB && isLineBreak;
     if (isLineBreakInserted) {
       const target = value.slice(fromB - 3, fromB);
-      if (target === "===") {
+      // console.log(
+      //   `${target} befroe line ${lineBeforeB} ${target === lineBeforeB}`
+      // );
+      const command = lineBeforeB.trim();
+      if (command === "===") {
         mutable =
           mutable.slice(0, fromB + 1) +
           `${new Date().toLocaleString("kr")}\n` +
           mutable.slice(fromB + 1);
         mutable = this.addEndDate(mutable, fromB);
+      } else if (command === "/end" || command === "/e") {
+        mutable = mutable.slice(0, fromB - lineBeforeB.length);
+        mutable = this.addEndDate(mutable, fromB);
+      } else if (command === "/s" || command === "/start") {
+        mutable =
+          mutable.slice(0, fromB - lineBeforeB.length) +
+          "===\n" +
+          `${new Date().toLocaleString("kr")}\n` +
+          mutable.slice(fromB + 1);
       }
     }
     // mutable.text += console.log("newenwenwenw value", value);
@@ -178,6 +183,7 @@ export interface TimeLogChanges {
   toB: number;
   isLineBreak: boolean;
   value: string;
+  lineBeforeB: string;
   // constructor(
   //   public fromA: number,
   //   public toA: number,

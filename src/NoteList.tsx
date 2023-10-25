@@ -137,16 +137,6 @@ export default function NoteList() {
             </button>
           );
         })}
-        {/* <li className="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600">
-          Profile
-        </li>
-        <li className="w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600">
-          Settings
-        </li>
-        <li className="w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600">
-          Messages
-        </li>
-        <li className="w-full px-4 py-2 rounded-b-lg">Download</li> */}
       </ul>
     </div>
   );
