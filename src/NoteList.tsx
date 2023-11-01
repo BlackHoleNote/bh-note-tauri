@@ -7,7 +7,6 @@ import "./NoteList.css";
 import { log } from "./log";
 import { IFlatMetadata } from "react-accessible-treeview/dist/TreeView/utils";
 import { useGetAllNotesQuery } from "./repository/APIClient";
-import { File, FileVisitor, Folder, Note, RootFolder } from "./Entity/Note";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import {
   FileViewModel,
@@ -16,79 +15,7 @@ import {
   loadNotes,
   selectNode,
 } from "./store/NoteListSlice";
-import { increment } from "./store/SliceExample";
-import { event } from "@tauri-apps/api";
 import { Button, IconButton } from "@material-tailwind/react";
-
-// class FileVisitorImpl implements FileVisitor<ITreeNode<FileViewModel>> {
-//   node: ITreeNode<FileViewModel> = { name: "" };
-
-//   visitFolder(folder: Folder): ITreeNode<FileViewModel> {
-//     const children = folder.childs.map((note) => {
-//       return this.visitFile(note);
-//     });
-
-//     return this.makeFile(folder, children);
-//   }
-
-//   visitNote(note: Note): ITreeNode<FileViewModel> {
-//     return this.makeFile(note);
-//   }
-
-//   visitFile(file: File): ITreeNode<FileViewModel> {
-//     if ((file as Folder).childs != undefined)
-//       return this.visitFolder(file as Folder);
-//     return this.makeFile(file);
-//   }
-
-//   makeFile(
-//     file: File,
-//     children: ITreeNode<FileViewModel>[] = []
-//   ): ITreeNode<FileViewModel> {
-//     return {
-//       id: file.id,
-//       name: file.title,
-//       metadata: new FileViewModel(file?.id ?? 0, file.title),
-//       children: children,
-//     };
-//   }
-// }
-
-// function makeData(viewModel: Folder): INode<FileViewModel>[] {
-//   const visitor = new FileVisitorImpl();
-
-//   return flattenTree(visitor.visitFolder(viewModel));
-// }
-interface FolderIconProps {
-  isOpen: boolean;
-}
-
-const FolderIcon: React.FC<FolderIconProps> = ({ isOpen }) =>
-  isOpen ? (
-    <FaRegFolderOpen color="e8a87c" className="icon" />
-  ) : (
-    <FaRegFolder color="e8a87c" className="icon" />
-  );
-
-interface FileIconProps {
-  filename: string;
-}
-
-const FileIcon: React.FC<FileIconProps> = ({ filename }) => {
-  const extension = filename.slice(filename.lastIndexOf(".") + 1);
-  switch (extension) {
-    case "js":
-      return <DiJavascript color="yellow" className="icon" />;
-    case "css":
-      return <DiCss3 color="turquoise" className="icon" />;
-    case "json":
-      return <FaList color="yellow" className="icon" />;
-    case "npmignore":
-      return <DiNpm color="red" className="icon" />;
-    default:
-      return null;
-  }
-};
 
 export default function NoteList() {
   const count = useAppSelector((state) => state.counter.value);

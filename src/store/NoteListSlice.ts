@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "./app";
-import { Note } from "../Entity/Note";
+import { Note, SaveNoteDTO } from "../Entity/Note";
 import _, { random, uniqueId } from "lodash";
 import { IFlatMetadata } from "react-accessible-treeview/dist/TreeView/utils";
 import { LogoutReason, logout } from "./AuthSlice";
