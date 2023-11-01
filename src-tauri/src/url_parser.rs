@@ -64,7 +64,7 @@ mod tests {
     #[test]
     fn loginTest() {
         let parser = CustomSchemeURLParser {};
-        let result = CustomSchemeURLParser::login("blackhole://login?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzaWxiYXBhZEBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTY5Njk0MzY0NSwiZXhwIjoxNjk2OTQ0MjQ1fQ.dWqEuaDsRg3rnDnhdhHIpbmN7P6s4bHjXGRogu7vvj4&refreshToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzaWxiYXBhZEBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTY5Njk0MzY0NSwiZXhwIjoxNzA0NzE5NjQ1fQ.YjlXrzFz-C5SDlou2CcZdBzTpUTPF4p_4wyw2-Fm63A");
+        let result = CustomSchemeURLParser::login("blackhole://login2?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzaWxiYXBhZEBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTY5Njk0MzY0NSwiZXhwIjoxNjk2OTQ0MjQ1fQ.dWqEuaDsRg3rnDnhdhHIpbmN7P6s4bHjXGRogu7vvj4&refreshToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzaWxiYXBhZEBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTY5Njk0MzY0NSwiZXhwIjoxNzA0NzE5NjQ1fQ.YjlXrzFz-C5SDlou2CcZdBzTpUTPF4p_4wyw2-Fm63A");
         if let Some(token) = result {
             assert_eq!(token.token, String::from("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzaWxiYXBhZEBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTY5Njk0MzY0NSwiZXhwIjoxNjk2OTQ0MjQ1fQ.dWqEuaDsRg3rnDnhdhHIpbmN7P6s4bHjXGRogu7vvj4")); 
         } else {

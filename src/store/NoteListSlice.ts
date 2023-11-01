@@ -1,13 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "./app";
-import { Note, SaveNoteDTO } from "../Entity/Note";
+import { Note } from "../Entity/Note";
 import _, { random, uniqueId } from "lodash";
 import { IFlatMetadata } from "react-accessible-treeview/dist/TreeView/utils";
 import { LogoutReason, logout } from "./AuthSlice";
 import { log } from "../log";
 import { timeLogApi, useSaveNotesMutation } from "../repository/APIClient";
-import { act } from "react-dom/test-utils";
 
 export class FileViewModel implements IFlatMetadata {
   constructor(public id: number, public title: string) {}

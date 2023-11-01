@@ -27,10 +27,8 @@ export function LogoutApp() {
 
   return (
     <div className="h-screen w-screen flex justify-center">
-      {/* <div className=""> */}
       <LogoutButton className="flex items-center" />
       <DebugTool className="" />
-      {/* </div> */}
     </div>
   );
 }
@@ -100,12 +98,6 @@ function DebugTool(props: { className: string }) {
 }
 
 function LogoutButton(props: { className: string }) {
-  log({ object: host + `${import.meta.env}`, customMessage: "hostname" });
-  console.log(import.meta);
-  useEffect(() => {
-    console.log("logoutButton good");
-    // console.log(import.meta.env);
-  });
   let authUrl = `${host}/oauth2/authorization/google`;
   return (
     <div className={props.className}>

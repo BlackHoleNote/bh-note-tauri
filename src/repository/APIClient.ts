@@ -23,39 +23,10 @@ export default APIClient;
 export const PRODUCTION = import.meta.env.PROD;
 // export const host = ;
 // export const host = ;
-export const host = !PRODUCTION
-  ? "http://34.105.33.139:6868"
+export const host = PRODUCTION
+  ? "https://blackholenote.shop"
   : "http://localhost:8080";
-// const host = ;
 
-// export async function getTimeLogs(): Promise<TimeLog[]> {
-//   let res = await APIClient.get<TimeLog[]>(`${host}/notes`);
-//   return res.data;
-// }
-
-// export async function createTimeLogsAPI(note: Note): Promise<SaveNoteDTO> {
-//   let { data, status } = await APIClient.post<SaveNoteDTO>(
-//     `${host}/v2/note/create`,
-//     note
-//   );
-//   if (status === 200) {
-//     return data;
-//   }
-//   throw new Error("failed to create note");
-// }
-
-// export async function saveTimeLogsAPI(note: Note): Promise<SaveNoteDTO> {
-//   let { data, status } = await APIClient.post<SaveNoteDTO>(
-//     `${host}/v2/note/save`,
-//     note
-//   );
-//   if (status === 200) {
-//     return data;
-//   }
-//   throw new Error("failed to create note");
-// }
-
-// Define a service using a base URL and expected endpoints
 const baseQuery = fetchBaseQuery({
   baseUrl: `${host}/`,
   prepareHeaders: (headers, api) => {

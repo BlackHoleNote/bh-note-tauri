@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useAppSelector } from "./store/hooks";
 import ReactCodeMirror, {
+  EditorView,
   Extension,
   useCodeMirror,
 } from "@uiw/react-codemirror";
-import { CodeMirror, Vim, vim } from "@replit/codemirror-vim";
+import { CodeMirror, Vim, getCM, vim } from "@replit/codemirror-vim";
 import { log } from "./log";
 import { useDispatch } from "react-redux";
 import { onTimeNoteChange, timeNoteWillStart } from "./store/TimeNotesSlice";
@@ -127,7 +128,14 @@ export default function TimeLogEditor() {
           value={timeNotes}
           autoFocus={true}
           height="100vh"
-          extensions={[vim()]}
+          extensions={[
+            vim({ status: true }),
+            EditorView.inputHandler.of((view, from, to, text) => {
+              console.log(getCM(view), from, to, text, "command");
+
+              return false;
+            }),
+          ]}
           onChange={(value, viewUpdate) => {
             const lineAt = (pos: number) => {
               console.log(

@@ -13,11 +13,9 @@ document.addEventListener("keydown", (e: KeyboardEvent) => {
 });
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  // <React.StrictMode>
   <Provider store={store}>
     <ThemeProvider>
       <App />
     </ThemeProvider>
   </Provider>
-  // </React.StrictMode>
 );

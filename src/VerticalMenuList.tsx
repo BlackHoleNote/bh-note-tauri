@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux";
 import { LogoutReason, logout } from "./store/AuthSlice";
 import { useSaveNotesMutation } from "./repository/APIClient";
 import { log } from "./log";
+import { Button } from "@material-tailwind/react";
 
 export default function VerticalMenuList() {
   let dispatch = useDispatch();
@@ -10,15 +11,16 @@ export default function VerticalMenuList() {
   });
   log({ object: isError, customMessage: "서버 상태" });
   return (
-    <div>
-      <h1>TimeLogList</h1>
-      <button
+    <div className="wt=">
+      <p>TimeLogList</p>
+      <Button
+        size="sm"
         onClick={() => {
           dispatch(logout(LogoutReason.User));
         }}
       >
         logout
-      </button>
+      </Button>
       {isLoading ? (
         <p>임시저장 진행중</p>
       ) : isError && !isSuccess ? (

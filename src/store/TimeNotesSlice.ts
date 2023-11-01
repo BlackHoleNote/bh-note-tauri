@@ -31,7 +31,6 @@ export const timeNotesSlice = createSlice(
           (state as TimeNotesState).value = service.state();
         },
         onTimeNoteChange: (state, action: PayloadAction<TimeLogChanges>) => {
-          let { fromA, toA, fromB, toB, isLineBreak, value } = action.payload;
           service.timeLogDidChanges(action.payload);
           (state as TimeNotesState).value = service.state();
         },

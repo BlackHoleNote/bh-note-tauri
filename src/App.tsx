@@ -77,41 +77,29 @@ function LoginApp() {
   return (
     <div className="main">
       <div className="split-view hbox">
-        <div className="splitContainer container1 w-[40] bg-[#eeeeee]"></div>
-        <VerticalMenuList />
+        <div className="splitContainer container1 w-[72px] bg-[#eeeeee]">
+          <VerticalMenuList />
+        </div>
         <div className="divider w-[3px]"></div>
         <div className="splitContainer container2 bg-[#eeeeee]">
           <NoteList />
-          {/* <p>준</p>
-        <p>비</p>
-        <p>중</p> */}
-          {/* <NoteList noteListPresentationService={container.resolve(NoteListPresentationService)}/> */}
         </div>
         <div className="divider w-[3px]"></div>
         <div className="splitContainer container3 bg-[#dcd2d2] grow">
           <TimeLogEditor />
-          {/* <NoteEditorView noteService={container.resolve(NoteService)}/> */}
         </div>
       </div>
     </div>
   );
 }
 function App() {
-  const [name, setName] = useState("");
-  const [user, setUser] = useState(null);
-
   const auth = useSelector(myAuth);
 
   useEffect(() => {
     return () => {};
   }, []);
 
-  return (
-    <>
-      {auth ? <LoginApp /> : <LogoutApp />}
-      {/* <div>log</div> */}
-    </>
-  );
+  return <>{auth ? <LoginApp /> : <LogoutApp />}</>;
 }
 
 export default App;
