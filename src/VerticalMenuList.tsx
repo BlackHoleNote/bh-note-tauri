@@ -3,9 +3,11 @@ import { LogoutReason, logout } from "./store/AuthSlice";
 import { useSaveNotesMutation } from "./repository/APIClient";
 import { log } from "./log";
 import { Button } from "@material-tailwind/react";
+import { useAppSelector } from "./store/hooks";
 
 export default function VerticalMenuList() {
   let dispatch = useDispatch();
+  let lastLoginTime = useAppSelector((state) => state.auth.lastLoginTime);
   let [_, { isError, isLoading, isSuccess }] = useSaveNotesMutation({
     fixedCacheKey: "server.state",
   });
@@ -28,6 +30,7 @@ export default function VerticalMenuList() {
       ) : (
         <p>서버 상태 좋음</p>
       )}
+      {lastLoginTime ? <p>{`${lastLoginTime}`}</p> : <></>}
     </div>
   );
 }

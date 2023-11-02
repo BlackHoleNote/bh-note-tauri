@@ -6,6 +6,7 @@ import { log } from "../log";
 // Define a type for the slice state
 interface AuthState {
   auth?: Auth;
+  lastLoginTime?: Date;
 }
 
 export interface Token {
@@ -28,6 +29,7 @@ export const authSlice = createSlice({
   reducers: {
     login: (state, action: PayloadAction<Token>) => {
       state.auth = { token: action.payload };
+      state.lastLoginTime = new Date();
       log({ object: state.auth, customMessage: "로그인 완료" });
     },
 
@@ -38,6 +40,7 @@ export const authSlice = createSlice({
         logLevel: "debug",
       });
       state.auth = undefined;
+      state.lastLoginTime = undefined;
     },
   },
 });

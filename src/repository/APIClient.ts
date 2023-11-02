@@ -30,7 +30,6 @@ export const host = PRODUCTION
 const baseQuery = fetchBaseQuery({
   baseUrl: `${host}/`,
   prepareHeaders: (headers, api) => {
-    console.log(import.meta.env.HOST);
     headers.set(
       "Authorization",
       "Bearer " + (api.getState() as RootState).auth.auth?.token.token ?? ""
@@ -50,20 +49,26 @@ const baseQueryWithReauth: BaseQueryFn<
     // try to get a new token
     try {
       const refreshResult = await baseQuery(
-        "api/admin/refreshToken",
+        {
+          url: "api/admin/token/refresh",
+          params: {
+            refreshToken:
+              (api.getState() as RootState).auth.auth?.token.refreshToken ?? "",
+          },
+        },
         api,
         extraOptions
       );
       if (refreshResult.data as Token) {
-        // store the new token
         api.dispatch(login(refreshResult.data as Token));
-        // retry the initial query
         result = await baseQuery(args, api, extraOptions);
         return result;
       }
-    } finally {
-      api.dispatch(logout(LogoutReason.TokenExpired));
+    } catch (e) {
+      log({ object: e, customMessage: "401 이외의 에러 발생" });
     }
+
+    api.dispatch(logout(LogoutReason.TokenExpired));
   }
   return result;
 };

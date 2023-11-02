@@ -144,7 +144,7 @@ fn main() {
             }
         }
         event => {
-            println!("other run event {:?}", event);
+            // println!("other run event {:?}", event);
         }
         });
 }
