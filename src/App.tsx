@@ -75,16 +75,16 @@ function initResizer() {
 
 function LoginApp() {
   return (
-    <div className="main">
-      <div className="split-view hbox">
-        <div className="splitContainer container1 w-[72px] bg-[#eeeeee]">
+    <div className="main overscroll-none">
+      <div className="flex hbox">
+        <div className="splitContainer container1 shrink-0 w-[72px] bg-[#eeeeee]">
           <VerticalMenuList />
         </div>
-        <div className="divider w-[3px]"></div>
-        <div className="splitContainer container2 bg-[#eeeeee]">
+        <div className="divider w-[3px] shrink-0"></div>
+        <div className="splitContainer container2 shrink-0 bg-[#eeeeee]">
           <NoteList />
         </div>
-        <div className="divider w-[3px]"></div>
+        <div className="divider w-[3px] shrink-0"></div>
         <div className="splitContainer container3 bg-[#dcd2d2] grow">
           <TimeLogEditor />
         </div>

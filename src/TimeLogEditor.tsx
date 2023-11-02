@@ -129,6 +129,7 @@ export default function TimeLogEditor() {
           autoFocus={true}
           height="100vh"
           extensions={[
+            EditorView.lineWrapping,
             vim({ status: true }),
             EditorView.inputHandler.of((view, from, to, text) => {
               console.log(getCM(view), from, to, text, "command");
