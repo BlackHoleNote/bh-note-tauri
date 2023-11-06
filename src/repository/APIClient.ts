@@ -35,7 +35,15 @@ const baseQuery = fetchBaseQuery({
       "Bearer " + (api.getState() as RootState).auth.auth?.token.token ?? ""
     );
     headers.set("content-type", "application/json");
-    log({ object: headers, customMessage: "header 준비" });
+    log({
+      object:
+        "endpoint: " +
+          api.endpoint +
+          "token: " +
+          (api.getState() as RootState).auth.auth?.token.refreshToken ??
+        "" + `${new Date()}`,
+      customMessage: "api 호출 request 준비 끝",
+    });
     return headers;
   },
 });

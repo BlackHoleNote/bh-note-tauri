@@ -8,6 +8,7 @@ pub struct CustomSchemeURLParser {
 #[derive(Clone, serde::Deserialize, serde::Serialize, Debug)]
 pub struct Token {
     token: String,
+    #[serde(rename="refreshToken")]
     refesh_token: String,
     // id: String
 }

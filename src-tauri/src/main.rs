@@ -41,7 +41,7 @@ fn main() {
     let mut builder = tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![greet]);
 
-    #[cfg(target_os = "mac_os")]
+    #[cfg(target_os = "macos")]
     {
         builder = builder.plugin(tauri_plugin_log::Builder::default().targets([
             LogTarget::LogDir,
