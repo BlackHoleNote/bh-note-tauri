@@ -24,13 +24,15 @@ export default function VerticalMenuList() {
         logout
       </Button>
       {isLoading ? (
-        <p>임시저장 진행중</p>
+        // <p>임시저장 진행중</p>
+        <></>
       ) : isError && !isSuccess ? (
         <p color="red">서버 상태 불안정</p>
       ) : (
-        <p>서버 상태 좋음</p>
+        // <p>서버 상태 좋음</p>
+        <></>
       )}
-      {lastLoginTime ? <p>{`${lastLoginTime}`}</p> : <></>}
+      {/* {lastLoginTime ? <p>{`${lastLoginTime}`}</p> : <></>} */}
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { RootState } from "./app";
+import { store, type RootState } from "./app";
 import { TimeLogChanges, TimeLogsService } from "../Entity/TimeLog";
 import { Note } from "../Entity/Note";
 import { LogoutReason, logout } from "./AuthSlice";
@@ -21,7 +21,11 @@ const initialState: TimeNotesState = {
 
 export const timeNotesSlice = createSlice(
   (() => {
-    let service = new TimeLogsService();
+    let service = new TimeLogsService(() => {
+      // TODO: - 순환참조 제거
+      // return store.getState().todo.todos;
+      return [];
+    });
     return {
       name: "timeNotesSlice",
       initialState: { value: "" },

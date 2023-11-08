@@ -6,6 +6,7 @@ import { timeLogApi } from "../repository/APIClient";
 import { authReducer } from "./AuthSlice";
 import { logger } from "redux-logger";
 import { log } from "../log";
+import { todoReducer } from "./TodoSlice";
 // ...
 
 const customLogger: Middleware = (store) => (next) => (action) => {
@@ -23,6 +24,7 @@ export const store = configureStore({
     noteList: noteListReducer,
     timeNotes: timeNotesReducer,
     timeLogApi: timeLogApi.reducer,
+    todo: todoReducer,
     auth: authReducer,
   },
   middleware: (getDefaultMiddleware) =>

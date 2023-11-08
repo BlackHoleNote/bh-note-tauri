@@ -1,49 +1,6 @@
-// interface TimeLog {
-//   update(text: string): TimeLog;
-//   // {
-//   //   return new TimeLog(
-//   //     TimeLogType.Text,
-//   //     this.id,
-//   //     new Date(),
-//   //     text,
-//   //     this.endDate
-//   //   );
-//   // }
-
-import { map } from "lodash";
 import { log } from "../log";
 import { Note } from "./Note";
-
-//   logged(): TimeLog;
-//   // {
-//   //   return new TimeLog(
-//   //     TimeLogType.Text,
-//   //     this.id,
-//   //     this.startDate,
-//   //     this.text,
-//   //     new Date()
-//   //   );
-//   // }
-
-//   get endDateString(): string;
-//   // {
-//   //   if (this.endDate) {
-//   //     return this.endDate.toISOString();
-//   //   } else {
-//   //     return "";
-//   //   }
-//   // }
-
-//   // static temp(id: number = 0): TimeLog
-//   // {
-//   //   return new TimeLog(TimeLogType.Temp, id, new Date(), "", null);
-//   // }
-
-//   // static equals(lhs: TimeLog, rhs: TimeLog): boolean
-//   // {
-//   //   return lhs.id === rhs.id;
-//   // }
-// }
+import { Todo } from "./Todo";
 
 enum TimeLogType {
   Text,
@@ -51,32 +8,15 @@ enum TimeLogType {
 }
 
 interface TimeLogs {
-  // constructor(
   id: number;
   previousVersion: number;
   version: number;
   title: string;
   lastUpdatedTime: Date;
   contents: TimeLog[];
-  // ) {}
-
-  // static temp(id: number = 0): TimeLogs {
-  //   // ForDebugging 주석 부분은 TypeScript에서는 제거하거나 수정해야 할 수 있습니다.
-  //   const tempTimeLogs = [TimeLog.temp(0)]; // TimeLog.temp 메서드 호출 방식은 TimeLog 클래스에 따라 수정해야 할 수 있습니다.
-  //   return new TimeLogs(id, 0, 0, "", new Date(), tempTimeLogs);
-  // }
-
-  // 나머지 메서드와 프로퍼티를 TypeScript에 맞게 변환해야 합니다.
-  // Codable 및 Equatable 프로토콜을 준수하는 방법도 고려해야 합니다.
 }
 
 export class TimeLog {
-  // type: TimeLogType;
-  // id: number;
-  // topic: string;
-  // text: string;
-  // startDate: Date;
-  // endDate?: Date | null;
   constructor(
     public id: number,
     public text: string,
@@ -85,25 +25,15 @@ export class TimeLog {
     public topic?: string | null
   ) {}
 
-  /**
-   * name
-   */
-
   public toText(): string {
     return this.text;
-    // let toEndDate: string = "";
-    // if (this.endDate != null) {
-    //   toEndDate = " ~ " + this.endDate.toLocaleString("kr");
-    // }
-    // return `===\n${this.startDate.toLocaleString("kr")}${toEndDate}\n${
-    //   this.text
-    // }`;
   }
 }
 
 export class TimeLogsService {
   timeLogs: Array<TimeLog>;
-  constructor() {
+
+  constructor(private todoMaker: () => Todo[]) {
     this.timeLogs = [
       new TimeLog(0, `===\n${new Date().toLocaleString("kr")}\n`, new Date()),
     ];
@@ -138,8 +68,9 @@ export class TimeLogsService {
       const target = value.slice(fromB - 3, fromB);
       // console.log(
       //   `${target} befroe line ${lineBeforeB} ${target === lineBeforeB}`
-      // );
+      // )sssssssssss
       const command = lineBeforeB.trim();
+      log({ object: target, customMessage: "refresh" });
       if (command === "===") {
         mutable =
           mutable.slice(0, fromB + 1) +
@@ -155,9 +86,17 @@ export class TimeLogsService {
           "===\n" +
           `${new Date().toLocaleString("kr")}\n` +
           mutable.slice(fromB + 1);
+      } else if (command === "/t" || command === "/todo") {
+        mutable =
+          mutable.slice(0, fromB - lineBeforeB.length) +
+          this.todoMaker()
+            .map((todo) => {
+              "- " + todo.title;
+            })
+            .join("\n") +
+          mutable.slice(fromB + 1);
       }
     }
-    // mutable.text += console.log("newenwenwenw value", value);
     this.timeLogs[0].text = mutable;
   }
 
@@ -184,12 +123,4 @@ export interface TimeLogChanges {
   isLineBreak: boolean;
   value: string;
   lineBeforeB: string;
-  // constructor(
-  //   public fromA: number,
-  //   public toA: number,
-  //   public fromB: number,
-  //   public toB: number,
-  //   public isLineBreak: boolean,
-  //   public value: string
-  // ) {}
 }

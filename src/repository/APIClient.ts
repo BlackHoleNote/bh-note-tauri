@@ -11,18 +11,7 @@ import { RootState } from "../store/app";
 import { LogoutReason, Token, login, logout } from "../store/AuthSlice";
 import { log } from "../log";
 
-let APIClient = axios.create({
-  // headers: { "User-Agent":
-  //     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36",
-  // },
-});
-
-export default APIClient;
-
-// APIClient.get("https://www.google.com").then((res) => {});
 export const PRODUCTION = import.meta.env.PROD;
-// export const host = ;
-// export const host = ;
 export const host = PRODUCTION
   ? "https://blackholenote.shop"
   : "http://localhost:8080";
@@ -47,6 +36,7 @@ const baseQuery = fetchBaseQuery({
     return headers;
   },
 });
+
 const baseQueryWithReauth: BaseQueryFn<
   string | FetchArgs,
   unknown,
@@ -54,7 +44,6 @@ const baseQueryWithReauth: BaseQueryFn<
 > = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
   if (result.error && result.error.status === 401) {
-    // try to get a new token
     try {
       const refreshResult = await baseQuery(
         {
@@ -80,6 +69,7 @@ const baseQueryWithReauth: BaseQueryFn<
   }
   return result;
 };
+
 export const timeLogApi = createApi({
   reducerPath: "timeLogApi",
   baseQuery: baseQueryWithReauth,

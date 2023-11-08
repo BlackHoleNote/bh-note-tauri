@@ -2,20 +2,12 @@ import React, { useEffect, useState } from "react";
 import { DiCss3, DiJavascript, DiNpm } from "react-icons/di";
 import { FaList, FaRegFolder, FaRegFolderOpen } from "react-icons/fa";
 import { GoFile, GoFileDirectory } from "react-icons/go";
-import TreeView, { INode, flattenTree } from "react-accessible-treeview";
 import "./NoteList.css";
 import { log } from "./log";
-import { IFlatMetadata } from "react-accessible-treeview/dist/TreeView/utils";
 import { useGetAllNotesQuery } from "./repository/APIClient";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import {
-  FileViewModel,
-  addNewNotes,
-  addNewNote,
-  loadNotes,
-  selectNode,
-} from "./store/NoteListSlice";
-import { Button, IconButton } from "@material-tailwind/react";
+import { addNewNotes, loadNotes, selectNode } from "./store/NoteListSlice";
+import { IconButton } from "@material-tailwind/react";
 
 export default function NoteList() {
   const count = useAppSelector((state) => state.counter.value);
