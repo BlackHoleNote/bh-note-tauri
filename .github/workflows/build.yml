@@ -18,7 +18,7 @@ jobs:
     strategy:
       matrix:
         node-version: [18.x]
-        os: [windows-latest, macos-latest, macos-latest-xlarge]
+        os: [windows-latest, macos-latest]
 
     runs-on: ${{ matrix.os }}
 
@@ -41,5 +41,5 @@ jobs:
       - name: Download
         uses: actions/upload-artifact@v3
         with:
-          name: Build.dmg
-          path: src-tauri/target/release/bundle/dmg/blackhole_0.0.0_aarch64.dmg
+          name: Build
+          path: src-tauri/target/release/bundle/dmg
