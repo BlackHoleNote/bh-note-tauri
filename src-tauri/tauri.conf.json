@@ -44,14 +44,6 @@
         "width": 800,
         "height": 600
       }
-    ],
-    "updater": {
-      "active": true,
-      "endpoints": [
-        "https://releases.myapp.com/{{target}}/{{arch}}/{{current_version}}"
-      ],
-      "dialog": true,
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDQ5RTY4OUZCMTM2RjgwN0YKUldSL2dHOFQrNG5tU2ZuZHdXdVJtTGVzSkhYT29yblk0S002Uzd6dlRIZ0F3aHd1eitEbC9vUnQK"
-    }
+    ]
   }
 }

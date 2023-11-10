@@ -3,7 +3,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "./app";
 import { Note, SaveNoteDTO } from "../Entity/Note";
 import { LogoutReason, logout } from "./AuthSlice";
-import { log } from "../log";
+import { log } from "../utils/log";
 import { timeLogApi } from "../repository/APIClient";
 import { Todo } from "../Entity/Todo";
 

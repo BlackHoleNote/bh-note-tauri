@@ -4,7 +4,7 @@ import { store, type RootState } from "./app";
 import { Note, SaveNoteDTO } from "../Entity/Note";
 import _, { uniqueId } from "lodash";
 import { LogoutReason, logout } from "./AuthSlice";
-import { log } from "../log";
+import { log } from "../utils/log";
 import { timeLogApi } from "../repository/APIClient";
 
 // Define a type for the slice state

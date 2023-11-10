@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
+import App from "./component/App";
 import "./styles.css";
 import { emit } from "@tauri-apps/api/event";
 import { Provider } from "react-redux";

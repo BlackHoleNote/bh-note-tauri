@@ -1,25 +1,25 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import { useAppSelector } from "./store/hooks";
+import { useAppSelector } from "../store/hooks";
 import ReactCodeMirror, {
   EditorView,
   Extension,
   useCodeMirror,
 } from "@uiw/react-codemirror";
 import { CodeMirror, Vim, getCM, vim } from "@replit/codemirror-vim";
-import { log } from "./log";
+import { log } from "../utils/log";
 import { useDispatch } from "react-redux";
-import { onTimeNoteChange, timeNoteWillStart } from "./store/TimeNotesSlice";
-import { TimeLogChanges } from "./Entity/TimeLog";
+import { onTimeNoteChange, timeNoteWillStart } from "../store/TimeNotesSlice";
+import { TimeLogChanges } from "../Entity/TimeLog";
 import {
   timeLogApi,
   useCreateNotesMutation,
   useGetAllNotesQuery,
   useSaveNotesMutation,
-} from "./repository/APIClient";
+} from "../repository/APIClient";
 import { debounce } from "lodash";
-import { Note } from "./Entity/Note";
+import { Note } from "../Entity/Note";
 import { type } from "@tauri-apps/api/os";
-import { selectedTimeNoteDidCreate } from "./store/NoteListSlice";
+import { selectedTimeNoteDidCreate } from "../store/NoteListSlice";
 
 export default function TimeLogEditor() {
   let selectedNode = useAppSelector((state) => state.noteList.selectedNode);

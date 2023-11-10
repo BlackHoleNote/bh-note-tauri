@@ -5,7 +5,7 @@ import { timeNotesReducer } from "./TimeNotesSlice";
 import { timeLogApi } from "../repository/APIClient";
 import { authReducer } from "./AuthSlice";
 import { logger } from "redux-logger";
-import { log } from "../log";
+import { log } from "../utils/log";
 import { todoReducer } from "./TodoSlice";
 // ...
 

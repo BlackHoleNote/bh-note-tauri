@@ -1,9 +1,9 @@
 import { useDispatch } from "react-redux";
-import { LogoutReason, logout } from "./store/AuthSlice";
-import { useSaveNotesMutation } from "./repository/APIClient";
-import { log } from "./log";
+import { LogoutReason, logout } from "../store/AuthSlice";
+import { useSaveNotesMutation } from "../repository/APIClient";
+import { log } from "../utils/log";
 import { Button } from "@material-tailwind/react";
-import { useAppSelector } from "./store/hooks";
+import { useAppSelector } from "../store/hooks";
 
 export default function VerticalMenuList() {
   let dispatch = useDispatch();

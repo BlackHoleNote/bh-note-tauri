@@ -3,10 +3,10 @@ import { DiCss3, DiJavascript, DiNpm } from "react-icons/di";
 import { FaList, FaRegFolder, FaRegFolderOpen } from "react-icons/fa";
 import { GoFile, GoFileDirectory } from "react-icons/go";
 import "./NoteList.css";
-import { log } from "./log";
-import { useGetAllNotesQuery } from "./repository/APIClient";
-import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { addNewNotes, loadNotes, selectNode } from "./store/NoteListSlice";
+import { log } from "../utils/log";
+import { useGetAllNotesQuery } from "../repository/APIClient";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { addNewNotes, loadNotes, selectNode } from "../store/NoteListSlice";
 import { IconButton } from "@material-tailwind/react";
 
 export default function NoteList() {

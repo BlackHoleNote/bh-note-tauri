@@ -1,10 +1,10 @@
 import { JSXElementConstructor, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { Token, login } from "./store/AuthSlice";
+import { Token, login } from "../store/AuthSlice";
 import { emit, listen } from "@tauri-apps/api/event";
-import { log } from "./log";
+import { log } from "../utils/log";
 import { Button, Textarea } from "@material-tailwind/react";
-import { host, useAdminTokenQuery } from "./repository/APIClient";
+import { host, useAdminTokenQuery } from "../repository/APIClient";
 
 export function LogoutApp() {
   let dispatch = useDispatch();

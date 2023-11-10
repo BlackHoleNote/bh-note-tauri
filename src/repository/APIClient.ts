@@ -9,7 +9,7 @@ import {
 } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store/app";
 import { LogoutReason, Token, login, logout } from "../store/AuthSlice";
-import { log } from "../log";
+import { log } from "../utils/log";
 
 export const PRODUCTION = import.meta.env.PROD;
 export const host = PRODUCTION
