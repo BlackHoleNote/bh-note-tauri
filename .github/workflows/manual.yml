@@ -4,28 +4,23 @@ name: Manual workflow
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "release/*" ]
 
   workflow_dispatch:
     # Inputs the workflow accepts.
     inputs:
       name:
         # Friendly description to be shown in the UI instead of 'name'
-        description: 'Person to greet'
-        # Default value if no value is explicitly provided
-        default: 'World'
-        # Input has to be provided for the workflow to run
-        required: true
-        # The data type of the input
-        type: string
+        description: 'Manul build'
 
 jobs:
   build:
-    runs-on: windows-latest
-
     strategy:
       matrix:
-        node-version: [16.x, 18.x]
+        node-version: [18.x]
+        os: [windows-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
     - uses: actions/checkout@v3
@@ -39,3 +34,9 @@ jobs:
       run: |
         npm install
         npm run tauri build
+    
+    - name: Download
+        uses: actions/upload-artifact@v3
+        with:
+          name: Build.dmg
+          path: target/release/bundle/dmg/blackhole_0.0.0_aarch64.dmg
