@@ -49,6 +49,8 @@ fn main() {
             LogTarget::Webview,
         ]).build());
     }
+
+    builder = builder.plugin(tauri_plugin_store::Builder::default().build());
     
     let app = builder.setup(|app| {
         let handle = app.handle();

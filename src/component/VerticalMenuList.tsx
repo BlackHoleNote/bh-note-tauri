@@ -7,11 +7,9 @@ import { useAppSelector } from "../store/hooks";
 
 export default function VerticalMenuList() {
   let dispatch = useDispatch();
-  let lastLoginTime = useAppSelector((state) => state.auth.lastLoginTime);
   let [_, { isError, isLoading, isSuccess }] = useSaveNotesMutation({
     fixedCacheKey: "server.state",
   });
-  log({ object: isError, customMessage: "서버 상태" });
   return (
     <div className="wt=">
       <p>TimeLogList</p>
@@ -32,7 +30,6 @@ export default function VerticalMenuList() {
         // <p>서버 상태 좋음</p>
         <></>
       )}
-      {/* {lastLoginTime ? <p>{`${lastLoginTime}`}</p> : <></>} */}
     </div>
   );
 }

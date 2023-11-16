@@ -73,17 +73,31 @@ const baseQueryWithReauth: BaseQueryFn<
 export const timeLogApi = createApi({
   reducerPath: "timeLogApi",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["getAll"],
+  tagTypes: ["getAll", "Note", "Error"],
   endpoints: (builder) => ({
     getAllNotes: builder.query<Note[], void>({
       query: () => `v2/notes`,
       providesTags: ["getAll"],
+    }),
+    getNote: builder.query<Note, number>({
+      query: (id) => `v2/notes/${id}`,
+      providesTags: (data, error, arg) => {
+        return [{ type: "Note", id: arg }, { type: "Error" }];
+      },
     }),
     createNotes: builder.mutation<SaveNoteDTO, Note>({
       query: (arg) => ({ url: `v2/note/create`, method: "POST", body: arg }),
     }),
     saveNotes: builder.mutation<SaveNoteDTO, Note>({
       query: (arg) => ({ url: `v2/note/save`, method: "POST", body: arg }),
+      invalidatesTags: (data, error, args) => {
+        if (error) {
+          log({ object: args, customMessage: "invalidateTags will be fired" });
+          log({ object: error, customMessage: "invalidateTags will be fired" });
+          return [{ type: "Note", id: args.id }];
+        }
+        return [];
+      },
     }),
     adminToken: builder.query<Token, void>({
       query: () => `api/admin/token`,
@@ -93,6 +107,7 @@ export const timeLogApi = createApi({
 
 export const {
   useGetAllNotesQuery,
+  useGetNoteQuery,
   useCreateNotesMutation,
   useSaveNotesMutation,
   useAdminTokenQuery,

@@ -15,10 +15,10 @@ export default function NoteList() {
   const selectedNode = useAppSelector((state) => state.noteList.selectedNode);
   const { data } = useGetAllNotesQuery(undefined, {
     refetchOnMountOrArgChange: true,
+    pollingInterval: 1000 * 60 * 5,
   });
 
   useEffect(() => {
-    log({ object: data, customMessage: "data will changed: " });
     if ((data ?? []).length > 0) {
       dispatch(loadNotes(data!));
     }

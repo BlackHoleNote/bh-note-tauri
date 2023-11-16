@@ -25,6 +25,7 @@ function createNewNote(title: string): Note {
     id: id,
     title: `${new Date().toLocaleDateString()}`,
     contents: "",
+    version: 0,
   };
 }
 
@@ -36,6 +37,9 @@ function timeLogDidChanged(state: NoteListState, note: Note) {
   let index = state.root.findIndex((_note) => _note.id === note.id);
   if (index !== -1) {
     state.root[index] = note;
+  }
+  if (state.selectedNode?.id === note.id) {
+    state.selectedNode = note;
   }
 }
 
@@ -83,6 +87,15 @@ export const noteListSlice = createSlice({
         }
       }
     },
+
+    updateNoteVersion: (state, action: PayloadAction<SaveNoteDTO>) => {
+      if (
+        state.selectedNode !== null &&
+        state.selectedNode.id == action.payload.id
+      ) {
+        state.selectedNode.version = action.payload.version;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(logout, (state, action: PayloadAction<LogoutReason>) => {
@@ -108,6 +121,7 @@ export const {
   loadNotes,
   selectedTimeNoteDidCreate,
   timeNoteDidChanged,
+  updateNoteVersion,
 } = noteListSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
