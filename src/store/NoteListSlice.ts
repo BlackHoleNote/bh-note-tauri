@@ -70,6 +70,7 @@ export const noteListSlice = createSlice({
       }
     },
 
+    // TODO: 이게 여기 있는게 문제인듯 함, selectedNote는 id를 전달하는 매개 그 이상이 되면 안될 것 같다는 생각이 듬
     timeNoteDidChanged: (state, action: PayloadAction<Note>) => {
       timeLogDidChanged(state, action.payload);
     },

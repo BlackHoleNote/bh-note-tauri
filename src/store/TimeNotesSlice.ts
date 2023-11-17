@@ -4,9 +4,10 @@ import { store, type RootState } from "./app";
 import { TimeLogChanges, TimeLogsService } from "../Entity/TimeLog";
 import { Note } from "../Entity/Note";
 import { LogoutReason, logout } from "./AuthSlice";
+import { timeNoteDidChanged } from "./NoteListSlice";
 
 // Define a type for the slice state
-interface TimeNotesState {
+export interface TimeNotesState {
   value: string;
 }
 
@@ -38,6 +39,15 @@ export const timeNotesSlice = createSlice(
           service.timeLogDidChanges(action.payload);
           (state as TimeNotesState).value = service.state();
         },
+      },
+      extraReducers: (builder) => {
+        builder.addCase(
+          timeNoteDidChanged,
+          (state, action: PayloadAction<Note>) => {
+            service.timeNoteWillChange(action.payload);
+            (state as TimeNotesState).value = service.state();
+          }
+        );
       },
     };
   })()

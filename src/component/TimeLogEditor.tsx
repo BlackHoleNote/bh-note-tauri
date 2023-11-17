@@ -8,7 +8,11 @@ import ReactCodeMirror, {
 import { CodeMirror, Vim, getCM, vim } from "@replit/codemirror-vim";
 import { log } from "../utils/log";
 import { useDispatch } from "react-redux";
-import { onTimeNoteChange, timeNoteWillStart } from "../store/TimeNotesSlice";
+import {
+  TimeNotesState,
+  onTimeNoteChange,
+  timeNoteWillStart,
+} from "../store/TimeNotesSlice";
 import { TimeLogChanges } from "../Entity/TimeLog";
 import {
   timeLogApi,
@@ -31,7 +35,9 @@ export default function TimeLogEditor() {
   let selectedNode = useAppSelector((state) => state.noteList.selectedNode);
   let dispatch = useDispatch();
   const previous = useRef(selectedNode);
-  let timeNotes = useAppSelector((state) => state.timeNotes.value);
+  let timeNotes = useAppSelector(
+    (state) => (state.timeNotes as TimeNotesState).value
+  );
   const ref = useRef(timeNotes);
 
   const selectedNoteRef = useRef(selectedNode);
